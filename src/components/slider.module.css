@@ -1,0 +1,38 @@
+.wrapper {
+  height: 100%;
+  position: relative;
+  color: white;
+  min-width: 21px;
+}
+
+.container {
+  width: 4px;
+  height: 125px;
+  background-color: var(--background);
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+.posIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 13px;
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  background-color: var(--endColor);
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  border: 1px solid var(--endColor);
+  cursor: pointer;
+}
+
+.progressIndicator {
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  width: 4px;
+  height: 50%;
+  background-color: var(--endColor);
+  transform: translate(-50%, -0%);
+}
