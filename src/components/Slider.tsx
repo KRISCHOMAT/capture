@@ -4,9 +4,10 @@ import styles from "./slider.module.css";
 interface Props {
   setter?: (val: number) => void;
   initVal?: number;
+  label?: string;
 }
 
-const Slider = ({ setter, initVal }: Props) => {
+const Slider = ({ setter, initVal, label }: Props) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -76,6 +77,7 @@ const Slider = ({ setter, initVal }: Props) => {
           ref={progressIndicatorRef}
         ></div>
       </div>
+      <span>{label}</span>
     </div>
   );
 };

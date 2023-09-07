@@ -10,7 +10,6 @@ interface Props {
 }
 
 const WaveForm = ({ name, index }: Props) => {
-  const isPlaying = useAppState((state) => state.isPlaying);
   const { setStart, setEnd, setRecording } = useAppState(
     (state) => ({
       setStart: state.setStart,
@@ -19,6 +18,9 @@ const WaveForm = ({ name, index }: Props) => {
     }),
     shallow
   );
+  const { volume } = useAppState((state) => ({
+    volume: state.samples[index].vol,
+  }));
 
   const { rec, filteredData, audioBuffer } = useMediaRecorder();
 
@@ -126,8 +128,7 @@ const WaveForm = ({ name, index }: Props) => {
       className={styles.wrapper}
       ref={wrapperRef}
       style={{
-        border: isPlaying ? "2px solid #f46d6d" : "2px solid transparent",
-        opacity: 1,
+        opacity: volume * (1 - 0.2) + 0.2,
       }}
     >
       <canvas ref={canvasRef}></canvas>

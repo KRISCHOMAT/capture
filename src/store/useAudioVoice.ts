@@ -6,6 +6,7 @@ import constants from "../utils/constants";
 export interface VoiceStore {
   sources: AudioBufferSourceNode[] | null;
   gain: GainNode | null;
+  volumes: GainNode[] | null;
   semitone: number;
   isPlaying: boolean;
 
@@ -18,7 +19,7 @@ const createStore = () => {
   return create<VoiceStore>((set, get) => ({
     sources: null,
     gain: null,
-    masterGain: null,
+    volumes: null,
     isPlaying: false,
     semitone: 0,
 
@@ -28,8 +29,14 @@ const createStore = () => {
 
       const gain = get().gain || ctx.createGain();
       const semitone = get().semitone;
+      const isPlaying = get().isPlaying;
+      const volumes: GainNode[] = [];
 
       for (let i = 0; i < constants.NUM_SAMPLES; i++) {
+        const vol = useAppState.getState().samples[i].vol;
+        volumes[i] = get().volumes?.[i] || ctx.createGain();
+        volumes[i].gain.value = vol;
+
         sources[i] = get().sources?.[i] || ctx.createBufferSource();
         sources[i].loop = true;
         sources[i].loopStart =
@@ -39,10 +46,20 @@ const createStore = () => {
           useAppState.getState().endPoints[i] *
           useAppState.getState().loopLength;
         if (!sources[i].buffer) {
-          sources[i].buffer = useAppState.getState().recordings[i];
+          sources[i].buffer = useAppState.getState().samples[i].buf;
         }
         sources[i].playbackRate.value = Math.pow(2, semitone / 12);
-        sources[i].connect(gain);
+        sources[i].connect(volumes[i]);
+        volumes[i].gain.setValueAtTime(
+          useAppState.getState().samples[i].vol,
+          ctx.currentTime
+        );
+
+        volumes[i].connect(gain);
+
+        if (!isPlaying) {
+          sources[i].start(ctx.currentTime, sources[i].loopStart);
+        }
       }
 
       const attack = useAppState.getState().attack;
@@ -52,16 +69,13 @@ const createStore = () => {
       gain.gain.setValueAtTime(currentGain, ctx.currentTime);
       gain.gain.linearRampToValueAtTime(1, ctx.currentTime + attack);
 
-      set({ gain, sources });
-
-      if (get().isPlaying) {
+      if (isPlaying) {
         clearTimeout(useAppState.getState().timeout as number);
       } else {
-        sources.forEach((source) => {
-          source.start(ctx.currentTime, source.loopStart);
-        });
+        set({ isPlaying: true });
       }
-      set({ isPlaying: true });
+
+      set({ gain, sources, volumes });
     },
     stopPlaying: () => {
       const ctx = useAppState.getState().ctx;
@@ -81,7 +95,7 @@ const createStore = () => {
           source.buffer = null;
           source.stop();
           source.disconnect();
-          set({ sources: null });
+          set({ sources: null, gain: null });
         });
         set({ isPlaying: false });
       }, release * 1000);
