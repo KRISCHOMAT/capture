@@ -2,29 +2,23 @@ import "./App.css";
 import WaveForm from "./components/WaveForm";
 import ControllsWrapper from "./components/ControllsWrapper";
 import Keyboard from "./components/Keyboard";
-import { useAppState } from "./store/store";
-import { shallow } from "zustand/shallow";
+import constants from "./utils/constants";
 
 function App() {
-  const { setRecordingA, setRecordingB, setRecordingC } = useAppState(
-    (state) => ({
-      setRecordingA: state.setRecordingA,
-      setRecordingB: state.setRecordingB,
-      setRecordingC: state.setRecordingC,
-    }),
-    shallow
-  );
   return (
-    <>
+    <div style={{ marginTop: "50%" }}>
       <div className="logo">
         <h1>Capture</h1>
       </div>
-      <WaveForm name="A" setRecording={setRecordingA} />
-      <WaveForm name="B" setRecording={setRecordingB} />
-      <WaveForm name="C" setRecording={setRecordingC} />
+      {Array.from({ length: constants.NUM_SAMPLES }).map((n, i) => {
+        return (
+          <WaveForm name={String.fromCharCode(65 + i)} index={i} key={i} />
+        );
+      })}
+
       <ControllsWrapper />
       <Keyboard />
-    </>
+    </div>
   );
 }
 

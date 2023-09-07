@@ -1,20 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./waveform.module.css";
 import useMediaRecorder from "../hooks/useMediaRecorder";
-import { useAppState } from "../store/store";
+import { useAppState } from "../store/useAppState";
 import { shallow } from "zustand/shallow";
 
 interface Props {
   name: string;
-  setRecording: (recording: AudioBuffer) => void;
+  index: number;
 }
 
-const WaveForm = ({ name, setRecording }: Props) => {
+const WaveForm = ({ name, index }: Props) => {
   const isPlaying = useAppState((state) => state.isPlaying);
-  const { setStart, setEnd } = useAppState(
+  const { setStart, setEnd, setRecording } = useAppState(
     (state) => ({
       setStart: state.setStart,
       setEnd: state.setEnd,
+      setRecording: state.setRecording,
     }),
     shallow
   );
@@ -87,7 +88,7 @@ const WaveForm = ({ name, setRecording }: Props) => {
 
   useEffect(() => {
     if (audioBuffer) {
-      setRecording(audioBuffer);
+      setRecording(audioBuffer, index);
     }
   }, [audioBuffer]);
 
@@ -102,8 +103,8 @@ const WaveForm = ({ name, setRecording }: Props) => {
     if (valueEnd <= valueStart + 5) {
       setValueStart(valueEnd - 5);
     }
-    setStart(valueStart / 100);
-    setEnd(valueEnd / 100);
+    setStart(valueStart / 100, index);
+    setEnd(valueEnd / 100, index);
   }, [valueStart, valueEnd]);
 
   useEffect(() => {
