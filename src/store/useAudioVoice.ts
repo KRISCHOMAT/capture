@@ -80,7 +80,6 @@ const createStore = () => {
     stopPlaying: () => {
       const ctx = useAppState.getState().ctx;
       const gain = get().gain;
-
       const sources = get().sources;
 
       const release = useAppState.getState().release;
@@ -95,7 +94,7 @@ const createStore = () => {
           source.buffer = null;
           source.stop();
           source.disconnect();
-          set({ sources: null, gain: null });
+          set({ sources: null });
         });
         set({ isPlaying: false });
       }, release * 1000);

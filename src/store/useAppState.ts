@@ -4,12 +4,10 @@ import { UseBoundStore, StoreApi } from "zustand";
 import constants from "../utils/constants";
 
 type Samples = {
-  [id: number]: {
-    buf: AudioBuffer | null;
-    vol: number;
-    start: number;
-    end: number;
-  };
+  buf: AudioBuffer | null;
+  vol: number;
+  start: number;
+  end: number;
 };
 
 export interface AppState {
@@ -21,7 +19,7 @@ export interface AppState {
   startPoints: number[];
   endPoints: number[];
   volumes: number[];
-  samples: Samples;
+  samples: Samples[];
   timeout: number | null;
   loopLength: number;
   voices: UseBoundStore<StoreApi<VoiceStore>>[];
@@ -29,23 +27,25 @@ export interface AppState {
   setEnd: (end: number, index: number) => void;
   setVolume: (volume: number, index: number) => void;
   setRecording: (recording: AudioBuffer, index: number) => void;
+  setAttack: (attack: number) => void;
+  setRelease: (release: number) => void;
 }
 
 const useAppState = create<AppState>((set, get) => ({
   ctx: new AudioContext(),
-  attack: 2,
-  release: 2,
+  attack: 1,
+  release: 1,
   start: 0,
   end: 1,
   startPoints: Array.from({ length: constants.NUM_SAMPLES }).map(() => 0),
   endPoints: Array.from({ length: constants.NUM_SAMPLES }).map(() => 1),
   volumes: Array.from({ length: constants.NUM_SAMPLES }).map(() => 0.5),
-  // TODO: programatically init samples object
-  samples: {
-    0: { buf: null, vol: 0.5, start: 0, end: 1 },
-    1: { buf: null, vol: 0.5, start: 0, end: 1 },
-    2: { buf: null, vol: 0.5, start: 0, end: 1 },
-  },
+  samples: Array.from({ length: constants.NUM_SAMPLES }).map(() => ({
+    buf: null,
+    vol: 0.5,
+    start: 0,
+    end: 1,
+  })),
   timeout: null,
   loopLength: 5,
   voices,
@@ -97,6 +97,12 @@ const useAppState = create<AppState>((set, get) => ({
       newRecordings[index].buf = recording;
       return { samples: newRecordings };
     }),
+  setAttack: (attack: number) => {
+    set({ attack });
+  },
+  setRelease: (release: number) => {
+    set({ release });
+  },
 }));
 
 export { useAppState };

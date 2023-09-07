@@ -41,6 +41,7 @@ const Slider = ({ setter, initVal, label }: Props) => {
       setter
     ) {
       setter(initVal / 100);
+
       posIndicatorRef.current.style.top = `${100 - initVal}%`;
       progressIndicatorRef.current.style.height = `${initVal}%`;
     }
