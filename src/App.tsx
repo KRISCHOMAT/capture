@@ -10,7 +10,7 @@ function App() {
       <div className="logo">
         <h1>Capture</h1>
       </div>
-      {Array.from({ length: constants.NUM_SAMPLES }).map((n, i) => {
+      {Array.from({ length: constants.NUM_SAMPLES }).map((_, i) => {
         return (
           <WaveForm name={String.fromCharCode(65 + i)} index={i} key={i} />
         );
