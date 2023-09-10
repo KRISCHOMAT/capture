@@ -23,6 +23,7 @@ const MainControls = () => {
         <div className={styles.hr} />
       </div>
       <div className={styles.container}>
+        <Slider label="Vol" />
         <Slider label="Att" setter={handleSetAttack} initVal={0} />
         <Slider label="Rel" setter={handleSetRelease} initVal={0} />
       </div>

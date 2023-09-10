@@ -20,10 +20,9 @@ const Controlls = ({ name, index, setVolume }: Props) => {
       </div>
       <div className={styles.container}>
         <Slider setter={handleSetVolume} label="Vol" />
-        <Slider />
-        <Slider />
-        <Slider />
-        <Slider />
+        <Slider label={"Att"} />
+        <Slider label={"Rel"} />
+        <Slider label={"Trig"} />
       </div>
     </div>
   );
