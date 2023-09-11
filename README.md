@@ -4,6 +4,7 @@ This is a sampler instrument made with react and the web audio api. It is curren
 
 You can record three samples and play up to 5 voices!
 
-ToDos:
+Current ToDos:
 
 - Touchevents
+- Responsive Design (Mobile)
