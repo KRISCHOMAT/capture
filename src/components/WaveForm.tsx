@@ -10,11 +10,12 @@ interface Props {
 }
 
 const WaveForm = ({ name, index }: Props) => {
-  const { setStart, setEnd, setRecording } = useAppState(
+  const { setStart, setEnd, setRecording, envs } = useAppState(
     (state) => ({
       setStart: state.setStart,
       setEnd: state.setEnd,
       setRecording: state.setRecording,
+      envs: state.envs,
     }),
     shallow
   );
@@ -33,10 +34,7 @@ const WaveForm = ({ name, index }: Props) => {
   const endRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const handleClick = () => {
-    console.log("hello");
-  };
+  const [distance, setDistance] = useState(0);
 
   const handleMouseMove = (
     e: React.MouseEvent,
@@ -55,6 +53,11 @@ const WaveForm = ({ name, index }: Props) => {
   const startRec = () => {
     rec();
   };
+
+  useEffect(() => {
+    const newDistance = valueEnd - valueStart;
+    setDistance(newDistance);
+  }, [envs, valueStart, valueEnd]);
 
   const draw = () => {
     if (!context || !canvasRef.current) return;
@@ -134,9 +137,43 @@ const WaveForm = ({ name, index }: Props) => {
       <canvas ref={canvasRef}></canvas>
       <div className={styles.controls}>
         <div className={styles.rec} onClick={startRec}></div>
-        <div className={styles.name} onClick={handleClick}>
-          {name}
-        </div>
+        <div className={styles.name}>{name}</div>
+      </div>
+      <div
+        className={styles.att}
+        style={{
+          left: `${valueStart}%`,
+          width: `${envs[index].att * distance}%`,
+        }}
+      >
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <line
+            x1="0%"
+            y1="100%"
+            x2="100%"
+            y2="0%"
+            stroke="black"
+            strokeWidth="2.5"
+          />
+        </svg>
+      </div>
+      <div
+        className={styles.rel}
+        style={{
+          left: `${valueEnd}%`,
+          width: `${envs[index].rel * distance}%`,
+        }}
+      >
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <line
+            x1="100%"
+            y1="100%"
+            x2="0%"
+            y2="0%"
+            stroke="black"
+            strokeWidth="2.5"
+          />
+        </svg>
       </div>
       <div
         className={styles.indicatorContainerStart}

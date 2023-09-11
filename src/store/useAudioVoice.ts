@@ -46,9 +46,9 @@ const createStore = () => {
       source.connect(env);
       env.connect(ctx.destination);
 
-      const trig = 0.5;
-      const attack = 0.3;
-      const release = 0.3;
+      const trig = useAppState.getState().envs[i].trg;
+      const attack = useAppState.getState().envs[i].att;
+      const release = useAppState.getState().envs[i].rel;
 
       env.gain.linearRampToValueAtTime(1, now + loopLength * attack);
 
@@ -84,51 +84,6 @@ const createStore = () => {
         sources[i] = get().sources?.[i] || ctx.createBufferSource();
         get().playSample(sources[i], i);
       }
-
-      // const ctx = useAppState.getState().ctx;
-      // const sources: AudioBufferSourceNode[] = [];
-      // const gain = get().gain || ctx.createGain();
-      // const semitone = get().semitone;
-      // const isPlaying = get().isPlaying;
-      // const volumes: GainNode[] = [];
-      // for (let i = 0; i < constants.NUM_SAMPLES; i++) {
-      //   const vol = useAppState.getState().samples[i].vol;
-      //   volumes[i] = get().volumes?.[i] || ctx.createGain();
-      //   volumes[i].gain.value = vol;
-      //   sources[i] = get().sources?.[i] || ctx.createBufferSource();
-      //   sources[i].loop = true;
-      //   sources[i].loopStart =
-      //     useAppState.getState().startPoints[i] *
-      //     useAppState.getState().loopLength;
-      //   sources[i].loopEnd =
-      //     useAppState.getState().endPoints[i] *
-      //     useAppState.getState().loopLength;
-      //   if (sources[i].buffer === null) {
-      //     console.log(sources[i].buffer);
-      //     sources[i].buffer = useAppState.getState().samples[i].buf;
-      //   }
-      //   sources[i].playbackRate.value = Math.pow(2, semitone / 12);
-      //   sources[i].connect(volumes[i]);
-      //   volumes[i].gain.setValueAtTime(
-      //     useAppState.getState().samples[i].vol,
-      //     ctx.currentTime
-      //   );
-      //   volumes[i].connect(gain);
-      //   if (!isPlaying) {
-      //     sources[i].start(ctx.currentTime, sources[i].loopStart);
-      //   }
-      // }
-      // const attack = useAppState.getState().attack;
-      // gain.connect(ctx.destination);
-      // const currentGain = get().isPlaying ? gain.gain.value : 0;
-      // gain.gain.setValueAtTime(currentGain, ctx.currentTime);
-      // gain.gain.linearRampToValueAtTime(1, ctx.currentTime + attack);
-      // if (isPlaying) {
-      //   clearTimeout(useAppState.getState().timeout as number);
-      // } else {
-      //   set({ isPlaying: true });
-      // }
-      // set({ gain, sources, volumes });
     },
     stopPlaying: () => {
       const ctx = useAppState.getState().ctx;

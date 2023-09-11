@@ -5,11 +5,32 @@ interface Props {
   name: string;
   index: number;
   setVolume: (volume: number, index: number) => void;
+  setEnvAtt: (att: number, index: number) => void;
+  setEnvRel: (rel: number, index: number) => void;
+  setEnvTrg: (trg: number, index: number) => void;
 }
 
-const Controlls = ({ name, index, setVolume }: Props) => {
+const Controlls = ({
+  name,
+  index,
+  setVolume,
+  setEnvAtt,
+  setEnvRel,
+  setEnvTrg,
+}: Props) => {
   const handleSetVolume = (vol: number) => {
     setVolume(vol, index);
+  };
+  const handleSetAtt = (att: number) => {
+    setEnvAtt(att / 2, index);
+  };
+
+  const handleSetRel = (rel: number) => {
+    setEnvRel(rel / 2, index);
+  };
+
+  const handleSetTrg = (trg: number) => {
+    setEnvTrg(trg, index);
   };
   return (
     <div className={styles.wrapper}>
@@ -20,9 +41,9 @@ const Controlls = ({ name, index, setVolume }: Props) => {
       </div>
       <div className={styles.container}>
         <Slider setter={handleSetVolume} label="Vol" />
-        <Slider label={"Att"} />
-        <Slider label={"Rel"} />
-        <Slider label={"Trig"} />
+        <Slider setter={handleSetAtt} label={"Att"} />
+        <Slider setter={handleSetRel} label={"Rel"} />
+        <Slider setter={handleSetTrg} label={"Trig"} />
       </div>
     </div>
   );

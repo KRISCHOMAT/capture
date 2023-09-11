@@ -3,12 +3,18 @@ import { voices, VoiceStore } from "./useAudioVoice";
 import { UseBoundStore, StoreApi } from "zustand";
 import constants from "../utils/constants";
 
-type Samples = {
+interface Samples {
   buf: AudioBuffer | null;
   vol: number;
   start: number;
   end: number;
-};
+}
+
+interface Env {
+  att: number;
+  rel: number;
+  trg: number;
+}
 
 export interface AppState {
   ctx: AudioContext;
@@ -20,6 +26,7 @@ export interface AppState {
   endPoints: number[];
   volumes: number[];
   samples: Samples[];
+  envs: Env[];
   timeout: number | null;
   loopLength: number;
   voices: UseBoundStore<StoreApi<VoiceStore>>[];
@@ -29,6 +36,9 @@ export interface AppState {
   setRecording: (recording: AudioBuffer, index: number) => void;
   setAttack: (attack: number) => void;
   setRelease: (release: number) => void;
+  setEnvAtt: (att: number, index: number) => void;
+  setEnvRel: (att: number, index: number) => void;
+  setEnvTrg: (trg: number, index: number) => void;
 }
 
 const useAppState = create<AppState>((set, get) => ({
@@ -46,9 +56,35 @@ const useAppState = create<AppState>((set, get) => ({
     start: 0,
     end: 1,
   })),
+  envs: Array.from({ length: constants.NUM_SAMPLES }).map(() => ({
+    att: 0.2,
+    rel: 0,
+    trg: 0.5,
+  })),
   timeout: null,
   loopLength: 5,
   voices,
+  setEnvAtt: (att: number, index: number) => {
+    set((state) => {
+      const newEnvs = { ...state.envs };
+      newEnvs[index].att = att;
+      return { envs: newEnvs };
+    });
+  },
+  setEnvRel: (rel: number, index: number) => {
+    set((state) => {
+      const newEnvs = { ...state.envs };
+      newEnvs[index].rel = rel;
+      return { envs: newEnvs };
+    });
+  },
+  setEnvTrg: (trg: number, index: number) => {
+    set((state) => {
+      const newEnvs = { ...state.envs };
+      newEnvs[index].trg = trg;
+      return { envs: newEnvs };
+    });
+  },
   setStart: (start: number, index: number) => {
     set((state) => {
       const newStartpoints = { ...state.startPoints };
