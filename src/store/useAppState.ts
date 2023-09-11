@@ -20,8 +20,6 @@ export interface AppState {
   ctx: AudioContext;
   attack: number;
   release: number;
-  start: number;
-  end: number;
   startPoints: number[];
   endPoints: number[];
   volumes: number[];
@@ -45,8 +43,6 @@ const useAppState = create<AppState>((set, get) => ({
   ctx: new AudioContext(),
   attack: 1,
   release: 1,
-  start: 0,
-  end: 1,
   startPoints: Array.from({ length: constants.NUM_SAMPLES }).map(() => 0),
   endPoints: Array.from({ length: constants.NUM_SAMPLES }).map(() => 1),
   volumes: Array.from({ length: constants.NUM_SAMPLES }).map(() => 0.5),
@@ -58,7 +54,7 @@ const useAppState = create<AppState>((set, get) => ({
   })),
   envs: Array.from({ length: constants.NUM_SAMPLES }).map(() => ({
     att: 0.2,
-    rel: 0,
+    rel: 0.2,
     trg: 0.5,
   })),
   timeout: null,

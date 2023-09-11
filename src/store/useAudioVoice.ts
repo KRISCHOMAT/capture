@@ -5,8 +5,8 @@ import constants from "../utils/constants";
 
 export interface VoiceStore {
   sources: AudioBufferSourceNode[] | null;
-  gain: GainNode | null;
   volumes: GainNode[] | null;
+  gain: GainNode | null;
   semitone: number;
   isPlaying: boolean;
 
@@ -19,18 +19,19 @@ export interface VoiceStore {
 const createStore = () => {
   return create<VoiceStore>((set, get) => ({
     sources: [],
-    gain: null,
     volumes: null,
+    gain: null,
     isPlaying: false,
     semitone: 0,
 
     playSample: (source: AudioBufferSourceNode, i: number) => {
+      set({ isPlaying: true });
       const ctx = useAppState.getState().ctx;
       const now = ctx.currentTime;
       const env = ctx.createGain();
+      const gain = get().gain as GainNode;
       const semitone = get().semitone;
       const buffer = useAppState.getState().samples[i].buf;
-
       env.gain.setValueAtTime(0, now);
       source.loop = true;
       source.loopStart =
@@ -44,9 +45,13 @@ const createStore = () => {
       const loopLength = source.loopEnd - source.loopStart;
       source.playbackRate.value = Math.pow(2, semitone / 12);
       source.connect(env);
-      env.connect(ctx.destination);
+      env.connect(gain);
 
-      const trig = useAppState.getState().envs[i].trg;
+      // TO BE IMPLEMENTED
+      //const rand = Math.random() * 0.5 - 0.25;
+      let trig = useAppState.getState().envs[i].trg;
+      trig = Math.min(Math.max(trig, 0), 1);
+
       const attack = useAppState.getState().envs[i].att;
       const release = useAppState.getState().envs[i].rel;
 
@@ -79,22 +84,39 @@ const createStore = () => {
     startPlaying: () => {
       const ctx = useAppState.getState().ctx;
       const sources: AudioBufferSourceNode[] = [];
-      set({ isPlaying: true });
-      for (let i = 0; i < constants.NUM_SAMPLES; i++) {
-        sources[i] = get().sources?.[i] || ctx.createBufferSource();
-        get().playSample(sources[i], i);
+      const gain = get().gain || ctx.createGain();
+      const gainValue = get().isPlaying ? gain.gain.value : 0;
+      gain.gain.setValueAtTime(gainValue, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(
+        1,
+        ctx.currentTime + useAppState.getState().attack
+      );
+      gain.connect(ctx.destination);
+
+      const timeout = useAppState.getState().timeout;
+      if (get().isPlaying && timeout) {
+        clearTimeout(timeout);
+      }
+
+      set({ gain });
+
+      if (!get().isPlaying) {
+        for (let i = 0; i < constants.NUM_SAMPLES; i++) {
+          sources[i] = get().sources?.[i] || ctx.createBufferSource();
+          get().playSample(sources[i], i);
+        }
       }
     },
     stopPlaying: () => {
       const ctx = useAppState.getState().ctx;
-      const gain = get().gain;
+      const gain = get().gain as GainNode;
       const sources = get().sources;
 
       const release = useAppState.getState().release;
-      const currentGain = gain?.gain.value as number;
+      const currentGain = gain.gain.value as number;
 
-      gain?.gain.setValueAtTime(currentGain, ctx.currentTime);
-      gain?.gain.linearRampToValueAtTime(0, ctx.currentTime + release);
+      gain.gain.setValueAtTime(currentGain, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + release);
 
       const timeout = setTimeout(() => {
         sources?.forEach((source) => {

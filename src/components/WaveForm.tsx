@@ -140,6 +140,10 @@ const WaveForm = ({ name, index }: Props) => {
         <div className={styles.name}>{name}</div>
       </div>
       <div
+        className={styles.trg}
+        style={{ left: `${distance * envs[index].trg + valueStart}%` }}
+      ></div>
+      <div
         className={styles.att}
         style={{
           left: `${valueStart}%`,
@@ -152,7 +156,7 @@ const WaveForm = ({ name, index }: Props) => {
             y1="100%"
             x2="100%"
             y2="0%"
-            stroke="black"
+            stroke="gray"
             strokeWidth="2.5"
           />
         </svg>
@@ -170,7 +174,7 @@ const WaveForm = ({ name, index }: Props) => {
             y1="100%"
             x2="0%"
             y2="0%"
-            stroke="black"
+            stroke="gray"
             strokeWidth="2.5"
           />
         </svg>

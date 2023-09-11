@@ -88,3 +88,10 @@ canvas {
   overflow: hidden;
   transform: translate(-100%);
 }
+
+.trg {
+  height: 100%;
+  position: absolute;
+  width: 2px;
+  background-color: gray;
+}
