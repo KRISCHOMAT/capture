@@ -25,13 +25,14 @@ const createStore = () => {
     semitone: 0,
 
     playSample: (source: AudioBufferSourceNode, i: number) => {
-      set({ isPlaying: true });
       const ctx = useAppState.getState().ctx;
       const now = ctx.currentTime;
       const env = ctx.createGain();
-      const gain = get().gain as GainNode;
+      const volumes = get().volumes as GainNode[];
       const semitone = get().semitone;
       const buffer = useAppState.getState().samples[i].buf;
+      if (!buffer) return;
+
       env.gain.setValueAtTime(0, now);
       source.loop = true;
       source.loopStart =
@@ -45,7 +46,7 @@ const createStore = () => {
       const loopLength = source.loopEnd - source.loopStart;
       source.playbackRate.value = Math.pow(2, semitone / 12);
       source.connect(env);
-      env.connect(gain);
+      env.connect(volumes[i]);
 
       // TO BE IMPLEMENTED
       //const rand = Math.random() * 0.5 - 0.25;
@@ -55,16 +56,19 @@ const createStore = () => {
       const attack = useAppState.getState().envs[i].att;
       const release = useAppState.getState().envs[i].rel;
 
-      env.gain.linearRampToValueAtTime(1, now + loopLength * attack);
+      env.gain.linearRampToValueAtTime(
+        1,
+        now + (loopLength * attack) / source.playbackRate.value
+      );
 
       const releaseTime = loopLength * (1 - release);
 
       setTimeout(() => {
         env.gain.linearRampToValueAtTime(
           0,
-          now + releaseTime + loopLength * release
+          now + releaseTime + (loopLength * release) / source.playbackRate.value
         );
-      }, releaseTime * 1000);
+      }, (releaseTime * 1000) / source.playbackRate.value);
 
       source.start(ctx.currentTime, source.loopStart);
 
@@ -72,18 +76,23 @@ const createStore = () => {
         setTimeout(() => {
           source.stop();
           source.disconnect();
-        }, loopLength * 1000);
+        }, (loopLength * 1000) / source.playbackRate.value);
 
         setTimeout(() => {
           const newSource = ctx.createBufferSource();
           get().playSample(newSource, i);
-        }, loopLength * trig * 1000);
+        }, (loopLength * trig * 1000) / source.playbackRate.value);
       }
     },
 
     startPlaying: () => {
       const ctx = useAppState.getState().ctx;
       const sources: AudioBufferSourceNode[] = [];
+      const volumes = get().volumes || [
+        ctx.createGain(),
+        ctx.createGain(),
+        ctx.createGain(),
+      ];
       const gain = get().gain || ctx.createGain();
       const gainValue = get().isPlaying ? gain.gain.value : 0;
       gain.gain.setValueAtTime(gainValue, ctx.currentTime);
@@ -98,10 +107,15 @@ const createStore = () => {
         clearTimeout(timeout);
       }
 
-      set({ gain });
+      set({ gain, volumes });
 
       if (!get().isPlaying) {
+        console.log("start new");
+
+        set({ isPlaying: true });
         for (let i = 0; i < constants.NUM_SAMPLES; i++) {
+          volumes[i].gain.value = useAppState.getState().volumes[i];
+          volumes[i].connect(gain);
           sources[i] = get().sources?.[i] || ctx.createBufferSource();
           get().playSample(sources[i], i);
         }

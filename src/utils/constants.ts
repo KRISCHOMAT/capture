@@ -4,8 +4,8 @@ interface Constants {
 }
 
 const constants: Constants = {
-  NUM_VOICES: 5,
-  NUM_SAMPLES: 3,
+  NUM_VOICES: 3,
+  NUM_SAMPLES: 2,
 };
 
 export default constants;

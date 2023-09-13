@@ -40,10 +40,10 @@ const Controlls = ({
         <div className={styles.hr} />
       </div>
       <div className={styles.container}>
-        <Slider setter={handleSetVolume} label="Vol" />
-        <Slider setter={handleSetAtt} label={"Att"} />
-        <Slider setter={handleSetRel} label={"Rel"} />
-        <Slider setter={handleSetTrg} label={"Trig"} />
+        <Slider initVal={50} setter={handleSetVolume} label="Vol" />
+        <Slider initVal={50} setter={handleSetAtt} label={"Att"} />
+        <Slider initVal={50} setter={handleSetRel} label={"Rel"} />
+        <Slider initVal={50} setter={handleSetTrg} label={"Trig"} />
       </div>
     </div>
   );

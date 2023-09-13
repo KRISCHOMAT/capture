@@ -53,8 +53,8 @@ const useAppState = create<AppState>((set, get) => ({
     end: 1,
   })),
   envs: Array.from({ length: constants.NUM_SAMPLES }).map(() => ({
-    att: 0.2,
-    rel: 0.2,
+    att: 0.5,
+    rel: 0.5,
     trg: 0.5,
   })),
   timeout: null,

@@ -2,12 +2,12 @@
   height: 100%;
   position: relative;
   color: white;
-  min-width: 21px;
+  width: 100%;
 }
 
 .container {
   width: 4px;
-  height: 125px;
+  height: 100px;
   background-color: var(--background);
   position: relative;
   left: 50%;

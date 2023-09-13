@@ -45,7 +45,7 @@ const Slider = ({ setter, initVal, label }: Props) => {
       posIndicatorRef.current.style.top = `${100 - initVal}%`;
       progressIndicatorRef.current.style.height = `${initVal}%`;
     }
-  }, []);
+  }, [initVal]);
 
   useEffect(() => {
     document.addEventListener("mouseup", () => {
