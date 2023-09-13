@@ -37,13 +37,13 @@ const WaveForm = ({ name, index }: Props) => {
   const [distance, setDistance] = useState(0);
 
   const handleMouseMove = (
-    e: React.MouseEvent,
+    clientX: number,
     ref: React.RefObject<HTMLDivElement>,
     setter: React.Dispatch<React.SetStateAction<number>>
   ) => {
     if (!wrapperRef.current || !ref.current || !isMouseDown) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
+    const x = clientX - rect.left;
     const pos = (x / rect.width) * 100;
     if (pos <= 0 || pos >= 100) return;
     ref.current.style.left = `${pos}%`;
@@ -83,7 +83,7 @@ const WaveForm = ({ name, index }: Props) => {
       "2d"
     ) as CanvasRenderingContext2D;
 
-    canvas.width = 500;
+    canvas.width = wrapperRef.current?.clientWidth || 400;
     canvas.height = 80; // Set your desired canvas height here
     context.strokeStyle = "white";
 
@@ -186,7 +186,21 @@ const WaveForm = ({ name, index }: Props) => {
           setIsMouseDown(true);
         }}
         onMouseMove={(e: React.MouseEvent) => {
-          handleMouseMove(e, startRef, setValueStart);
+          const clientX = e.clientX;
+          handleMouseMove(clientX, startRef, setValueStart);
+        }}
+        onTouchMove={(e: React.TouchEvent) => {
+          const clientX = e.touches[0].clientX;
+          handleMouseMove(clientX, startRef, setValueStart);
+        }}
+        onTouchStart={() => {
+          setIsMouseDown(true);
+        }}
+        onTouchEnd={() => {
+          setIsMouseDown(false);
+        }}
+        onTouchCancel={() => {
+          setIsMouseDown(false);
         }}
         ref={startRef}
       >
@@ -199,7 +213,24 @@ const WaveForm = ({ name, index }: Props) => {
           setIsMouseDown(true);
         }}
         onMouseMove={(e: React.MouseEvent) => {
-          handleMouseMove(e, endRef, setValueEnd);
+          e.preventDefault();
+          const clientX = e.clientX;
+          handleMouseMove(clientX, endRef, setValueEnd);
+        }}
+        onTouchMove={(e: React.TouchEvent) => {
+          e.preventDefault();
+
+          const clientX = e.touches[0].clientX;
+          handleMouseMove(clientX, startRef, setValueStart);
+        }}
+        onTouchStart={() => {
+          setIsMouseDown(true);
+        }}
+        onTouchEnd={() => {
+          setIsMouseDown(false);
+        }}
+        onTouchCancel={() => {
+          setIsMouseDown(false);
         }}
         ref={endRef}
       >

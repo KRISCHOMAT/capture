@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./tabmenu.module.css";
 import ControllsWrapper from "../ControllsWrapper";
 import MainControls from "../MainControls";
@@ -14,6 +14,9 @@ const TabMenu = () => {
           onClick={() => {
             setActiveId(0);
           }}
+          style={{
+            borderBottom: activeId === 0 ? "1px solid #082943" : "1px solid",
+          }}
         >
           Samples
         </div>
@@ -21,6 +24,9 @@ const TabMenu = () => {
           className={styles.link}
           onClick={() => {
             setActiveId(1);
+          }}
+          style={{
+            borderBottom: activeId === 1 ? "1px solid #082943" : "1px solid",
           }}
         >
           Main

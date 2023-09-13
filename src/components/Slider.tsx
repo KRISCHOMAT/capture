@@ -14,7 +14,7 @@ const Slider = ({ setter, initVal, label }: Props) => {
   const posIndicatorRef = useRef<HTMLDivElement>(null);
   const progressIndicatorRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (clientY: number) => {
     if (
       !isMouseDown ||
       !wrapperRef.current ||
@@ -23,7 +23,7 @@ const Slider = ({ setter, initVal, label }: Props) => {
     )
       return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    const y = e.clientY - rect.top;
+    const y = clientY - rect.top;
     const pos = (y / rect.height) * 100;
     if (pos <= 0 || pos >= 100) return;
     if (setter) {
@@ -51,9 +51,21 @@ const Slider = ({ setter, initVal, label }: Props) => {
     document.addEventListener("mouseup", () => {
       setIsMouseDown(false);
     });
+    document.addEventListener("touchend", () => {
+      setIsMouseDown(false);
+    });
+    document.addEventListener("touchcancel", () => {
+      setIsMouseDown(false);
+    });
 
     return () => {
       document.removeEventListener("mouseup", () => {
+        setIsMouseDown(false);
+      });
+      document.removeEventListener("touchend", () => {
+        setIsMouseDown(false);
+      });
+      document.removeEventListener("touchcancel", () => {
         setIsMouseDown(false);
       });
     };
@@ -62,17 +74,26 @@ const Slider = ({ setter, initVal, label }: Props) => {
   return (
     <div
       className={styles.wrapper}
-      onMouseMove={handleMouseMove}
+      onMouseDown={() => {
+        setIsMouseDown(true);
+      }}
+      onTouchStart={() => {
+        setIsMouseDown(true);
+      }}
+      onMouseMove={(e: React.MouseEvent) => {
+        e.preventDefault();
+        const clientY = e.clientX;
+        handleMouseMove(clientY);
+      }}
+      onTouchMove={(e: React.TouchEvent) => {
+        e.preventDefault();
+        const clientY = e.touches[0].clientY;
+        handleMouseMove(clientY);
+      }}
       ref={wrapperRef}
     >
       <div className={styles.container}>
-        <div
-          className={styles.posIndicator}
-          onMouseDown={() => {
-            setIsMouseDown(true);
-          }}
-          ref={posIndicatorRef}
-        ></div>
+        <div className={styles.posIndicator} ref={posIndicatorRef}></div>
         <div
           className={styles.progressIndicator}
           ref={progressIndicatorRef}

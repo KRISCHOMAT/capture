@@ -25,7 +25,7 @@ const createStore = () => {
     semitone: 0,
 
     playSample: (source: AudioBufferSourceNode, i: number) => {
-      const ctx = useAppState.getState().ctx;
+      const ctx = useAppState.getState().ctx || new AudioContext();
       const now = ctx.currentTime;
       const env = ctx.createGain();
       const volumes = get().volumes as GainNode[];
@@ -86,7 +86,7 @@ const createStore = () => {
     },
 
     startPlaying: () => {
-      const ctx = useAppState.getState().ctx;
+      const ctx = useAppState.getState().ctx || new AudioContext();
       const sources: AudioBufferSourceNode[] = [];
       const volumes = get().volumes || [
         ctx.createGain(),
@@ -122,7 +122,7 @@ const createStore = () => {
       }
     },
     stopPlaying: () => {
-      const ctx = useAppState.getState().ctx;
+      const ctx = useAppState.getState().ctx || new AudioContext();
       const gain = get().gain as GainNode;
       const sources = get().sources;
 

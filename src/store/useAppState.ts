@@ -17,7 +17,7 @@ interface Env {
 }
 
 export interface AppState {
-  ctx: AudioContext;
+  ctx: AudioContext | null;
   attack: number;
   release: number;
   startPoints: number[];
@@ -40,7 +40,7 @@ export interface AppState {
 }
 
 const useAppState = create<AppState>((set, get) => ({
-  ctx: new AudioContext(),
+  ctx: null,
   attack: 1,
   release: 1,
   startPoints: Array.from({ length: constants.NUM_SAMPLES }).map(() => 0),
@@ -114,10 +114,11 @@ const useAppState = create<AppState>((set, get) => ({
       const samples = { ...state.samples };
       samples[index].vol = volume;
       const newVoices = [...state.voices];
+
       newVoices.forEach((voice) => {
         const env = voice.getState().volumes?.[index];
         if (env) {
-          env.gain.setValueAtTime(volume, get().ctx.currentTime);
+          env.gain.setValueAtTime(volume, get().ctx?.currentTime || 0);
         }
       });
       return { samples };

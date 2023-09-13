@@ -1,9 +1,7 @@
 import "./App.css";
 import WaveForm from "./components/WaveForm";
-import ControllsWrapper from "./components/ControllsWrapper";
 import Keyboard from "./components/Keyboard";
 import constants from "./utils/constants";
-import MainControls from "./components/MainControls";
 import TabMenu from "./components/TabMenu/TabMenu";
 
 function App() {
@@ -18,10 +16,7 @@ function App() {
         );
       })}
       <TabMenu />
-
-      <ControllsWrapper />
       <Keyboard />
-      <MainControls />
     </div>
   );
 }

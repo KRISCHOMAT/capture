@@ -44,6 +44,9 @@ const Key = ({ startPlaying, stopPlaying, setSemitone }: Props) => {
         className={styles.key}
         onMouseDown={handlePlay}
         onMouseUp={handleStop}
+        onTouchStart={handlePlay}
+        onTouchEnd={handleStop}
+        onTouchCancel={handleStop}
       ></div>
       <div className={styles.pitch}>
         <button onClick={handlePitchDown}>{"<"}</button>

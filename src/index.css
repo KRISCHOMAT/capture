@@ -13,11 +13,21 @@
   -webkit-text-size-adjust: 100%;
 
   --startColor: #bfffa9;
+
   --endColor: #ffaea9;
   --background: #314d66;
+  --backgroundDark: #082943;
   --backgroundLight: #7194b2b3;
   --recColor: #f46d6d;
   --waveformColor: #ffe2e2;
+}
+
+#root {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 a {
@@ -46,4 +56,6 @@ html {
 
 .app {
   padding: 10px;
+  width: 100%;
+  max-width: 400px;
 }
