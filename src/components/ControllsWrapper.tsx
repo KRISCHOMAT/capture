@@ -29,14 +29,6 @@ const ControllsWrapper = () => {
         setEnvRel={setEnvRel}
         setEnvTrg={setEnvTrg}
       />
-      {/* <Controlls
-        name={"C"}
-        index={2}
-        setVolume={setVolume}
-        setEnvAtt={setEnvAtt}
-        setEnvRel={setEnvRel}
-        setEnvTrg={setEnvTrg}
-      /> */}
     </div>
   );
 };
