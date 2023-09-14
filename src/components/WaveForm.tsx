@@ -104,6 +104,12 @@ const WaveForm = ({ name, index }: Props) => {
     document.addEventListener("mouseup", () => {
       setIsMouseDown(false);
     });
+    document.addEventListener("touchend", () => {
+      setIsMouseDown(false);
+    });
+    document.addEventListener("touchcancel", () => {
+      setIsMouseDown(false);
+    });
 
     createContext();
 
@@ -173,6 +179,9 @@ const WaveForm = ({ name, index }: Props) => {
         onMouseDown={() => {
           setIsMouseDown(true);
         }}
+        onTouchStart={() => {
+          setIsMouseDown(true);
+        }}
         onMouseMove={(e: React.MouseEvent) => {
           const clientX = e.clientX;
           handleMouseMove(clientX, startRef, setValueStart);
@@ -180,15 +189,6 @@ const WaveForm = ({ name, index }: Props) => {
         onTouchMove={(e: React.TouchEvent) => {
           const clientX = e.touches[0].clientX;
           handleMouseMove(clientX, startRef, setValueStart);
-        }}
-        onTouchStart={() => {
-          setIsMouseDown(true);
-        }}
-        onTouchEnd={() => {
-          setIsMouseDown(false);
-        }}
-        onTouchCancel={() => {
-          setIsMouseDown(false);
         }}
         ref={startRef}
       >
@@ -207,24 +207,16 @@ const WaveForm = ({ name, index }: Props) => {
         }}
         onTouchMove={(e: React.TouchEvent) => {
           e.preventDefault();
-
           const clientX = e.touches[0].clientX;
-          handleMouseMove(clientX, startRef, setValueStart);
+          handleMouseMove(clientX, endRef, setValueEnd);
         }}
         onTouchStart={() => {
           setIsMouseDown(true);
-        }}
-        onTouchEnd={() => {
-          setIsMouseDown(false);
-        }}
-        onTouchCancel={() => {
-          setIsMouseDown(false);
         }}
         ref={endRef}
       >
         <div className={styles.endIndicator}></div>
       </div>
-      <span style={{ color: "white" }}>{filteredData.length}</span>
     </div>
   );
 };

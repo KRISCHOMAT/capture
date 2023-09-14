@@ -40,10 +40,8 @@ const useMediaRecorder = () => {
 
   const getMedia = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream, {
-      mimeType: "audio/webm;codecs=opus",
-    });
-    recorder.ondataavailable = async function (e: BlobEvent) {
+    const recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = async (e: BlobEvent) => {
       const audioCtx = new AudioContext();
       const raw = e.data;
       const arrayBuffer = await raw.arrayBuffer();
@@ -51,6 +49,9 @@ const useMediaRecorder = () => {
       const channelData = newBuf.getChannelData(1);
       setAudioBuffer(newBuf);
       setFilteredData(filterData(channelData));
+    };
+    recorder.onstop = async () => {
+      console.log("stopped");
     };
     setMediaRecorder(recorder);
   };
