@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./waveform.module.css";
 import useMediaRecorder from "../hooks/useMediaRecorder";
 import { useAppState } from "../store/useAppState";
-import { shallow } from "zustand/shallow";
 
 interface Props {
   name: string;
@@ -10,20 +9,13 @@ interface Props {
 }
 
 const WaveForm = ({ name, index }: Props) => {
-  const { setStart, setEnd, setRecording, envs } = useAppState(
-    (state) => ({
-      setStart: state.setStart,
-      setEnd: state.setEnd,
-      setRecording: state.setRecording,
-      envs: state.envs,
-    }),
-    shallow
-  );
-  const { volume } = useAppState((state) => ({
-    volume: state.samples[index].vol,
-  }));
+  const setStart = useAppState((state) => state.setStart);
+  const setEnd = useAppState((state) => state.setEnd);
+  // const setRecording = useAppState((state) => state.setRecording);
+  const envs = useAppState((state) => state.envs);
+  const volume = useAppState((state) => state.samples[index].vol);
 
-  const { rec, filteredData, audioBuffer } = useMediaRecorder();
+  const { rec, filteredData } = useMediaRecorder();
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [valueStart, setValueStart] = useState(50);
