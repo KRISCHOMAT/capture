@@ -7,9 +7,10 @@ import TabMenu from "./components/TabMenu/TabMenu";
 function App() {
   return (
     <div className="app">
-      {/* <div className="logo">
+      <div className="logo">
         <h1>Capture</h1>
-      </div> */}
+        <span>Version 1.0</span>
+      </div>
       {Array.from({ length: constants.NUM_SAMPLES }).map((_, i) => {
         return (
           <WaveForm name={String.fromCharCode(65 + i)} index={i} key={i} />

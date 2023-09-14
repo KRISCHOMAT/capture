@@ -87,11 +87,11 @@ const WaveForm = ({ name, index }: Props) => {
     setContext(context);
   };
 
-  useEffect(() => {
-    if (audioBuffer) {
-      setRecording(audioBuffer, index);
-    }
-  }, [audioBuffer]);
+  // useEffect(() => {
+  //   if (audioBuffer) {
+  //     setRecording(audioBuffer, index);
+  //   }
+  // }, [audioBuffer]);
 
   useEffect(() => {
     draw();
