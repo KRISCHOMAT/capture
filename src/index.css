@@ -26,7 +26,6 @@
   min-height: 100vh;
   min-width: 100vw;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
@@ -49,7 +48,7 @@ html {
 .logo {
   display: flex;
   flex-direction: column;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
 }
 
 .logo h1 {
@@ -69,7 +68,7 @@ html {
 }
 
 .app {
-  padding: 10px;
+  padding: 15px;
   width: 100%;
   max-width: 400px;
 }

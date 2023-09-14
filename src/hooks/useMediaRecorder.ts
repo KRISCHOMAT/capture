@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 const useMediaRecorder = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
-  const [bufDecode, setBufDecode] = useState<Float32Array>();
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer>();
   const [filteredData, setFilteredData] = useState<number[]>([]);
 
@@ -41,16 +40,16 @@ const useMediaRecorder = () => {
 
   const getMedia = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
+    const recorder = new MediaRecorder(stream, {
+      mimeType: "audio/webm;codecs=opus",
+    });
     recorder.ondataavailable = async function (e: BlobEvent) {
       const audioCtx = new AudioContext();
       const raw = e.data;
       const arrayBuffer = await raw.arrayBuffer();
       const newBuf = await audioCtx.decodeAudioData(arrayBuffer);
       const channelData = newBuf.getChannelData(1);
-
       setAudioBuffer(newBuf);
-      setBufDecode(channelData);
       setFilteredData(filterData(channelData));
     };
     setMediaRecorder(recorder);
@@ -60,7 +59,7 @@ const useMediaRecorder = () => {
     getMedia();
   }, []);
 
-  return { rec, bufDecode, filteredData, audioBuffer };
+  return { rec, filteredData, audioBuffer };
 };
 
 export default useMediaRecorder;

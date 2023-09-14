@@ -11,11 +11,11 @@ interface Props {
 const WaveForm = ({ name, index }: Props) => {
   const setStart = useAppState((state) => state.setStart);
   const setEnd = useAppState((state) => state.setEnd);
-  // const setRecording = useAppState((state) => state.setRecording);
+  const setRecording = useAppState((state) => state.setRecording);
   const envs = useAppState((state) => state.envs);
   const volume = useAppState((state) => state.samples[index].vol);
 
-  const { rec, filteredData } = useMediaRecorder();
+  const { rec, filteredData, audioBuffer } = useMediaRecorder();
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [valueStart, setValueStart] = useState(50);
@@ -79,11 +79,11 @@ const WaveForm = ({ name, index }: Props) => {
     setContext(context);
   };
 
-  // useEffect(() => {
-  //   if (audioBuffer) {
-  //     setRecording(audioBuffer, index);
-  //   }
-  // }, [audioBuffer]);
+  useEffect(() => {
+    if (audioBuffer) {
+      setRecording(audioBuffer, index);
+    }
+  }, [audioBuffer]);
 
   useEffect(() => {
     draw();
@@ -224,6 +224,7 @@ const WaveForm = ({ name, index }: Props) => {
       >
         <div className={styles.endIndicator}></div>
       </div>
+      <span style={{ color: "white" }}>{filteredData.length}</span>
     </div>
   );
 };
