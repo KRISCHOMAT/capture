@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const useMediaRecorder = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
-  const [audioCtx, setAudioCtx] = useState<AudioContext>();
+  const [audioCtx, setAudioCtx] = useState<AudioContext>(new AudioContext());
   const [bufDecode, setBufDecode] = useState<Float32Array>();
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer>();
   const [filteredData, setFilteredData] = useState<number[]>([]);
@@ -13,7 +13,6 @@ const useMediaRecorder = () => {
     }
     if (mediaRecorder) {
       mediaRecorder.start();
-
       setTimeout(() => {
         mediaRecorder.stop();
       }, 5000);
@@ -44,27 +43,40 @@ const useMediaRecorder = () => {
     return filteredData.map((n) => n * multiplier);
   };
 
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream: MediaStream) => {
-        setMediaRecorder(new MediaRecorder(stream));
-      });
-  }, []);
+  const getMedia = async () => {
+    if (!audioCtx) return;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = async function (e: BlobEvent) {
+      const raw = e.data;
+      const arrayBuffer = await raw.arrayBuffer();
+      const newBuf = await audioCtx.decodeAudioData(arrayBuffer);
+      const channelData = newBuf.getChannelData(1);
+
+      setAudioBuffer(newBuf);
+      setBufDecode(channelData);
+      setFilteredData(filterData(channelData));
+    };
+    setMediaRecorder(recorder);
+  };
 
   useEffect(() => {
-    if (mediaRecorder && audioCtx) {
-      mediaRecorder.ondataavailable = async function (e: BlobEvent) {
-        const raw = e.data;
-        const arrayBuffer = await raw.arrayBuffer();
-        const newBuf = await audioCtx.decodeAudioData(arrayBuffer);
-        const channelData = newBuf.getChannelData(1);
-        setAudioBuffer(newBuf);
-        setBufDecode(channelData);
-        setFilteredData(filterData(channelData));
-      };
-    }
-  }, [mediaRecorder, audioCtx]);
+    getMedia();
+  }, [audioCtx]);
+
+  // useEffect(() => {
+  //   if (mediaRecorder && audioCtx) {
+  //     mediaRecorder.ondataavailable = async function (e: BlobEvent) {
+  //       const raw = e.data;
+  //       const arrayBuffer = await raw.arrayBuffer();
+  //       const newBuf = await audioCtx.decodeAudioData(arrayBuffer);
+  //       const channelData = newBuf.getChannelData(1);
+  //       setAudioBuffer(newBuf);
+  //       setBufDecode(channelData);
+  //       setFilteredData(filterData(channelData));
+  //     };
+  //   }
+  // }, [mediaRecorder, audioCtx]);
 
   return { rec, bufDecode, filteredData, audioBuffer };
 };

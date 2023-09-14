@@ -106,7 +106,7 @@ const createStore = () => {
       if (get().isPlaying && timeout) {
         clearTimeout(timeout);
       }
-
+      useAppState.setState({ ctx });
       set({ gain, volumes });
 
       if (!get().isPlaying) {

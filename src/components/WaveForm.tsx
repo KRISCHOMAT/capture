@@ -50,10 +50,6 @@ const WaveForm = ({ name, index }: Props) => {
     setter(pos);
   };
 
-  const startRec = () => {
-    rec();
-  };
-
   useEffect(() => {
     const newDistance = valueEnd - valueStart;
     setDistance(newDistance);
@@ -136,7 +132,7 @@ const WaveForm = ({ name, index }: Props) => {
     >
       <canvas ref={canvasRef}></canvas>
       <div className={styles.controls}>
-        <div className={styles.rec} onClick={startRec}></div>
+        <div className={styles.rec} onClick={rec}></div>
         <div className={styles.name}>{name}</div>
       </div>
       <div

@@ -77,13 +77,13 @@ const Slider = ({ setter, initVal, label }: Props) => {
       onMouseDown={() => {
         setIsMouseDown(true);
       }}
-      onTouchStart={() => {
-        setIsMouseDown(true);
-      }}
       onMouseMove={(e: React.MouseEvent) => {
         e.preventDefault();
-        const clientY = e.clientX;
+        const clientY = e.clientY;
         handleMouseMove(clientY);
+      }}
+      onTouchStart={() => {
+        setIsMouseDown(true);
       }}
       onTouchMove={(e: React.TouchEvent) => {
         e.preventDefault();
@@ -93,7 +93,11 @@ const Slider = ({ setter, initVal, label }: Props) => {
       ref={wrapperRef}
     >
       <div className={styles.container}>
-        <div className={styles.posIndicator} ref={posIndicatorRef}></div>
+        <div
+          className={styles.posIndicator}
+          ref={posIndicatorRef}
+          style={{}}
+        ></div>
         <div
           className={styles.progressIndicator}
           ref={progressIndicatorRef}
