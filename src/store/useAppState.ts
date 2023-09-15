@@ -112,6 +112,8 @@ const useAppState = create<AppState>((set, get) => ({
   setVolume: (volume: number, index: number) => {
     set((state) => {
       const samples = { ...state.samples };
+      const volumes = [...state.volumes];
+      volumes[index] = volume;
       samples[index].vol = volume;
       const newVoices = [...state.voices];
 
@@ -121,7 +123,7 @@ const useAppState = create<AppState>((set, get) => ({
           env.gain.setValueAtTime(volume, get().ctx?.currentTime || 0);
         }
       });
-      return { samples };
+      return { samples, volumes };
     });
   },
   setRecording: (recording: AudioBuffer, index: number) =>
