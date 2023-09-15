@@ -135,7 +135,7 @@ const WaveForm = ({ name, sample }: Props) => {
         <div className={styles.rec} onClick={rec}></div>
         <div className={styles.name}>{name}</div>
       </div>
-      <div className={styles.trg} style={{ left: `${distance * 0.5}%` }}></div>
+      <div className={styles.trg} style={{ left: `${distance * trig}%` }}></div>
       <div
         className={styles.att}
         style={{
@@ -158,7 +158,7 @@ const WaveForm = ({ name, sample }: Props) => {
         className={styles.rel}
         style={{
           left: `${valueEnd}%`,
-          width: `${0.4 * distance}%`,
+          width: `${rel * distance}%`,
         }}
       >
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
