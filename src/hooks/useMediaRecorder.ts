@@ -46,7 +46,7 @@ const useMediaRecorder = () => {
       const raw = e.data;
       const arrayBuffer = await raw.arrayBuffer();
       const newBuf = await audioCtx.decodeAudioData(arrayBuffer);
-      const channelData = newBuf.getChannelData(1);
+      const channelData = newBuf.getChannelData(0);
       setAudioBuffer(newBuf);
       setFilteredData(filterData(channelData));
     };
