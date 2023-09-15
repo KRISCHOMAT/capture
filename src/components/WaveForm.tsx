@@ -201,7 +201,7 @@ const WaveForm = ({ name, index }: Props) => {
           handleMouseMove(clientX, startRef, setValueStart);
         }}
         onTouchMove={(e: React.TouchEvent) => {
-          const clientX = e.touches[0].clientX;
+          const clientX = e.targetTouches[0].clientX;
           handleMouseMove(clientX, startRef, setValueStart);
         }}
         ref={startRef}
@@ -221,7 +221,7 @@ const WaveForm = ({ name, index }: Props) => {
         }}
         onTouchMove={(e: React.TouchEvent) => {
           e.preventDefault();
-          const clientX = e.touches[0].clientX;
+          const clientX = e.targetTouches[0].clientX;
           handleMouseMove(clientX, endRef, setValueEnd);
         }}
         onTouchStart={() => {

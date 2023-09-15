@@ -102,7 +102,7 @@ const Slider = ({ setter, initVal, label }: Props) => {
         setIsMouseDown(true);
       }}
       onTouchMove={(e: React.TouchEvent) => {
-        const clientY = e.touches[0].clientY;
+        const clientY = e.targetTouches[0].clientY;
         handleMouseMove(clientY);
       }}
       ref={wrapperRef}
