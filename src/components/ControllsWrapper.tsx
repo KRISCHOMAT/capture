@@ -1,34 +1,21 @@
-import { useAppState } from "../store/useAppState";
 import Controlls from "./Controlls";
 import styles from "./controllswrapper.module.css";
+import useMasterStore from "../store/useMasterStore";
 
 const ControllsWrapper = () => {
-  const { setVolume, setEnvAtt, setEnvRel, setEnvTrg } = useAppState(
-    (state) => ({
-      setVolume: state.setVolume,
-      setEnvAtt: state.setEnvAtt,
-      setEnvRel: state.setEnvRel,
-      setEnvTrg: state.setEnvTrg,
-    })
-  );
+  const samples = useMasterStore((state) => state.samples);
+
   return (
     <div className={styles.wrapper}>
-      <Controlls
-        name={"A"}
-        index={0}
-        setVolume={setVolume}
-        setEnvAtt={setEnvAtt}
-        setEnvRel={setEnvRel}
-        setEnvTrg={setEnvTrg}
-      />
-      <Controlls
-        name={"B"}
-        index={1}
-        setVolume={setVolume}
-        setEnvAtt={setEnvAtt}
-        setEnvRel={setEnvRel}
-        setEnvTrg={setEnvTrg}
-      />
+      {samples.map((sample, i) => {
+        return (
+          <Controlls
+            key={i}
+            name={String.fromCharCode(65 + i)}
+            sample={sample()}
+          />
+        );
+      })}
     </div>
   );
 };

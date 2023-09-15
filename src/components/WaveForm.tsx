@@ -1,32 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./waveform.module.css";
-import useMediaRecorder from "../hooks/useMediaRecorder";
-import { useAppState } from "../store/useAppState";
+import { SampleStore } from "../store/useSampleStore";
 
 interface Props {
   name: string;
-  index: number;
+  sample: SampleStore;
 }
 
-const WaveForm = ({ name, index }: Props) => {
-  const setStart = useAppState((state) => state.setStart);
-  const setEnd = useAppState((state) => state.setEnd);
-  const setRecording = useAppState((state) => state.setRecording);
-  const envs = useAppState((state) => state.envs);
-  const volume = useAppState((state) => state.samples[index].vol);
-
-  const { rec, filteredData, audioBuffer, isRecording } = useMediaRecorder();
+const WaveForm = ({ name, sample }: Props) => {
+  const { rec, displayData, isRecording, setStart, setEnd, att, rel, trig } =
+    sample;
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [valueStart, setValueStart] = useState(50);
   const [valueEnd, setValueEnd] = useState(70);
   const [context, setContext] = useState<CanvasRenderingContext2D>();
+  const [distance, setDistance] = useState(0);
 
   const startRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [distance, setDistance] = useState(0);
 
   const handleMouseMove = (
     clientX: number,
@@ -45,18 +39,18 @@ const WaveForm = ({ name, index }: Props) => {
   useEffect(() => {
     const newDistance = valueEnd - valueStart;
     setDistance(newDistance);
-  }, [envs, valueStart, valueEnd]);
+  }, [valueStart, valueEnd]);
 
   const draw = () => {
     if (!context || !canvasRef.current) return;
 
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     const canvasBaseline = canvasRef.current.height / 2;
-    const dataLength = filteredData.length;
+    const dataLength = displayData.length;
 
     for (let i = 0; i < dataLength; i++) {
       const x = (i / (dataLength - 1)) * canvasRef.current.width;
-      const y = canvasBaseline + filteredData[i] * (canvasBaseline - 5);
+      const y = canvasBaseline + displayData[i] * (canvasBaseline - 5);
 
       context.beginPath();
       context.rect(x, y, 3, 3);
@@ -94,14 +88,8 @@ const WaveForm = ({ name, index }: Props) => {
   }, [startRef, endRef]);
 
   useEffect(() => {
-    if (audioBuffer) {
-      setRecording(audioBuffer, index);
-    }
-  }, [audioBuffer]);
-
-  useEffect(() => {
     draw();
-  }, [filteredData]);
+  }, [displayData]);
 
   useEffect(() => {
     if (valueStart >= valueEnd - 5) {
@@ -110,8 +98,8 @@ const WaveForm = ({ name, index }: Props) => {
     if (valueEnd <= valueStart + 5) {
       setValueStart(valueEnd - 5);
     }
-    setStart(valueStart / 100, index);
-    setEnd(valueEnd / 100, index);
+    setStart(valueStart / 100);
+    setEnd(valueEnd / 100);
   }, [valueStart, valueEnd]);
 
   useEffect(() => {
@@ -139,7 +127,7 @@ const WaveForm = ({ name, index }: Props) => {
       className={`${styles.wrapper} ${isRecording ? styles.recording : ""}`}
       ref={wrapperRef}
       style={{
-        opacity: volume * (1 - 0.2) + 0.2,
+        opacity: 1 * (1 - 0.2) + 0.2,
       }}
     >
       <canvas ref={canvasRef}></canvas>
@@ -147,15 +135,12 @@ const WaveForm = ({ name, index }: Props) => {
         <div className={styles.rec} onClick={rec}></div>
         <div className={styles.name}>{name}</div>
       </div>
-      <div
-        className={styles.trg}
-        style={{ left: `${distance * envs[index].trg + valueStart}%` }}
-      ></div>
+      <div className={styles.trg} style={{ left: `${distance * 0.5}%` }}></div>
       <div
         className={styles.att}
         style={{
           left: `${valueStart}%`,
-          width: `${envs[index].att * distance}%`,
+          width: `${att * distance}%`,
         }}
       >
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -173,7 +158,7 @@ const WaveForm = ({ name, index }: Props) => {
         className={styles.rel}
         style={{
           left: `${valueEnd}%`,
-          width: `${envs[index].rel * distance}%`,
+          width: `${0.4 * distance}%`,
         }}
       >
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

@@ -1,36 +1,30 @@
 import Slider from "./Slider";
 import styles from "./controlls.module.css";
+import { SampleStore } from "../store/useSampleStore";
 
 interface Props {
   name: string;
-  index: number;
-  setVolume: (volume: number, index: number) => void;
-  setEnvAtt: (att: number, index: number) => void;
-  setEnvRel: (rel: number, index: number) => void;
-  setEnvTrg: (trg: number, index: number) => void;
+
+  sample: SampleStore;
 }
 
-const Controlls = ({
-  name,
-  index,
-  setVolume,
-  setEnvAtt,
-  setEnvRel,
-  setEnvTrg,
-}: Props) => {
+const Controlls = ({ name, sample }: Props) => {
+  const { setAtt, setRel, setTrig, setVol } = sample;
+
   const handleSetVolume = (vol: number) => {
-    setVolume(vol, index);
+    setVol(vol);
   };
+
   const handleSetAtt = (att: number) => {
-    setEnvAtt(att / 2, index);
+    setAtt(att / 2);
   };
 
   const handleSetRel = (rel: number) => {
-    setEnvRel(rel / 2, index);
+    setRel(rel / 2);
   };
 
   const handleSetTrg = (trg: number) => {
-    setEnvTrg(trg, index);
+    setTrig(trg);
   };
   return (
     <div className={styles.wrapper}>

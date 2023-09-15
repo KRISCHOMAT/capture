@@ -10,11 +10,12 @@ interface MasterStore {
   rel: number;
   numSamples: number;
   numVoices: number;
+  sampleLength: number;
   samples: UseBoundStore<StoreApi<SampleStore>>[];
   voices: UseBoundStore<StoreApi<VoiceStore>>[];
 }
 
-const useMasterStore = create<MasterStore>((_, get) => ({
+const useMasterStore = create<MasterStore>(() => ({
   ctx: null,
   env: null,
   vol: 0,
@@ -22,10 +23,9 @@ const useMasterStore = create<MasterStore>((_, get) => ({
   rel: 0,
   numSamples: 2,
   numVoices: 3,
-  samples: Array.from({ length: get().numSamples }).map(() =>
-    createSampleStore()
-  ),
-  voices: Array.from({ length: get().numVoices }).map(() => createVoiceStore()),
+  sampleLength: 5000, // 5 sec
+  samples: Array.from({ length: 2 }).map(() => createSampleStore()),
+  voices: Array.from({ length: 3 }).map(() => createVoiceStore()),
 }));
 
 export default useMasterStore;
