@@ -9,6 +9,7 @@ interface Props {
 
 const Key = ({ startPlaying, stopPlaying, setSemitone }: Props) => {
   const [pitch, setPitch] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
   const handlePitchUp = () => {
     if (pitch >= 12) {
@@ -32,16 +33,18 @@ const Key = ({ startPlaying, stopPlaying, setSemitone }: Props) => {
 
   const handlePlay = () => {
     startPlaying();
+    setIsActive(true);
   };
 
   const handleStop = () => {
     stopPlaying();
+    setIsActive(false);
   };
 
   return (
     <div className={styles.wrapper}>
       <div
-        className={styles.key}
+        className={`${styles.key} ${isActive ? styles.active : ""}`}
         onMouseDown={handlePlay}
         onMouseUp={handleStop}
         onTouchStart={handlePlay}
@@ -49,9 +52,13 @@ const Key = ({ startPlaying, stopPlaying, setSemitone }: Props) => {
         onTouchCancel={handleStop}
       ></div>
       <div className={styles.pitch}>
-        <button onClick={handlePitchDown}>{"<"}</button>
+        <button onClick={handlePitchDown} onTouchStart={handlePitchDown}>
+          {"<"}
+        </button>
         <span>{pitch}</span>
-        <button onClick={handlePitchUp}>{">"}</button>
+        <button onClick={handlePitchUp} onTouchStart={handlePitchUp}>
+          {">"}
+        </button>
       </div>
     </div>
   );

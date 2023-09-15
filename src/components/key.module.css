@@ -16,7 +16,7 @@
   border-radius: 5px;
 }
 
-.key:hover {
+.active {
   background-color: var(--backgroundLight);
 }
 
