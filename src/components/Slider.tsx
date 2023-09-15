@@ -24,14 +24,31 @@ const Slider = ({ setter, initVal, label }: Props) => {
       return;
     const rect = wrapperRef.current.getBoundingClientRect();
     const y = clientY - rect.top;
+
     const pos = (y / rect.height) * 100;
     if (pos <= 0 || pos >= 100) return;
     if (setter) {
       setter((100 - pos) / 100);
     }
-    posIndicatorRef.current.style.top = `${pos}%`;
-    progressIndicatorRef.current.style.height = `${100 - pos}%`;
+    window.requestAnimationFrame(() => {
+      if (posIndicatorRef.current && progressIndicatorRef.current) {
+        posIndicatorRef.current.style.top = `${pos}%`;
+        progressIndicatorRef.current.style.height = `${100 - pos}%`;
+      }
+    });
   };
+
+  const handlePreventDefault = (e: TouchEvent) => {
+    e.preventDefault();
+  };
+
+  useEffect(() => {
+    if (wrapperRef.current) {
+      wrapperRef.current.ontouchmove = handlePreventDefault;
+      wrapperRef.current.ontouchstart = handlePreventDefault;
+      wrapperRef.current.ontouchcancel = handlePreventDefault;
+    }
+  }, [wrapperRef]);
 
   useEffect(() => {
     if (
@@ -58,6 +75,10 @@ const Slider = ({ setter, initVal, label }: Props) => {
       setIsMouseDown(false);
     });
 
+    document.addEventListener("touchmove", (e: TouchEvent) => {
+      e.preventDefault();
+    });
+
     return () => {
       document.removeEventListener("mouseup", () => {
         setIsMouseDown(false);
@@ -67,6 +88,9 @@ const Slider = ({ setter, initVal, label }: Props) => {
       });
       document.removeEventListener("touchcancel", () => {
         setIsMouseDown(false);
+      });
+      document.removeEventListener("touchmove", (e: TouchEvent) => {
+        e.preventDefault();
       });
     };
   }, []);
@@ -78,7 +102,6 @@ const Slider = ({ setter, initVal, label }: Props) => {
         setIsMouseDown(true);
       }}
       onMouseMove={(e: React.MouseEvent) => {
-        e.preventDefault();
         const clientY = e.clientY;
         handleMouseMove(clientY);
       }}
@@ -86,7 +109,6 @@ const Slider = ({ setter, initVal, label }: Props) => {
         setIsMouseDown(true);
       }}
       onTouchMove={(e: React.TouchEvent) => {
-        e.preventDefault();
         const clientY = e.touches[0].clientY;
         handleMouseMove(clientY);
       }}

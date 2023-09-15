@@ -22,7 +22,7 @@ const WaveForm = ({ name, index }: Props) => {
   const [valueEnd, setValueEnd] = useState(70);
   const [context, setContext] = useState<CanvasRenderingContext2D>();
 
-  const startRef = useRef(null);
+  const startRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -78,6 +78,24 @@ const WaveForm = ({ name, index }: Props) => {
     context.lineWidth = 0.5;
     setContext(context);
   };
+
+  const handlePreventDefault = (e: TouchEvent) => {
+    e.preventDefault();
+  };
+
+  useEffect(() => {
+    if (wrapperRef.current && startRef.current && endRef.current) {
+      wrapperRef.current.ontouchmove = handlePreventDefault;
+      wrapperRef.current.ontouchstart = handlePreventDefault;
+      wrapperRef.current.ontouchcancel = handlePreventDefault;
+      startRef.current.ontouchmove = handlePreventDefault;
+      startRef.current.ontouchstart = handlePreventDefault;
+      startRef.current.ontouchcancel = handlePreventDefault;
+      endRef.current.ontouchmove = handlePreventDefault;
+      endRef.current.ontouchstart = handlePreventDefault;
+      endRef.current.ontouchcancel = handlePreventDefault;
+    }
+  }, [wrapperRef, startRef, endRef]);
 
   useEffect(() => {
     if (audioBuffer) {
