@@ -4,12 +4,15 @@ const useMediaRecorder = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer>();
   const [filteredData, setFilteredData] = useState<number[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
 
   const rec = async () => {
     if (mediaRecorder) {
+      setIsRecording(true);
       mediaRecorder.start();
       setTimeout(() => {
         mediaRecorder.stop();
+        setIsRecording(false);
       }, 5000);
     }
   };
@@ -60,7 +63,7 @@ const useMediaRecorder = () => {
     getMedia();
   }, []);
 
-  return { rec, filteredData, audioBuffer };
+  return { rec, filteredData, audioBuffer, isRecording };
 };
 
 export default useMediaRecorder;

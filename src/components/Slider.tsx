@@ -75,10 +75,6 @@ const Slider = ({ setter, initVal, label }: Props) => {
       setIsMouseDown(false);
     });
 
-    document.addEventListener("touchmove", (e: TouchEvent) => {
-      e.preventDefault();
-    });
-
     return () => {
       document.removeEventListener("mouseup", () => {
         setIsMouseDown(false);
@@ -88,9 +84,6 @@ const Slider = ({ setter, initVal, label }: Props) => {
       });
       document.removeEventListener("touchcancel", () => {
         setIsMouseDown(false);
-      });
-      document.removeEventListener("touchmove", (e: TouchEvent) => {
-        e.preventDefault();
       });
     };
   }, []);

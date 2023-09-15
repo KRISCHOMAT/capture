@@ -15,7 +15,7 @@ const WaveForm = ({ name, index }: Props) => {
   const envs = useAppState((state) => state.envs);
   const volume = useAppState((state) => state.samples[index].vol);
 
-  const { rec, filteredData, audioBuffer } = useMediaRecorder();
+  const { rec, filteredData, audioBuffer, isRecording } = useMediaRecorder();
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [valueStart, setValueStart] = useState(50);
@@ -72,9 +72,8 @@ const WaveForm = ({ name, index }: Props) => {
     ) as CanvasRenderingContext2D;
 
     canvas.width = wrapperRef.current?.clientWidth || 400;
-    canvas.height = 80; // Set your desired canvas height here
+    canvas.height = wrapperRef.current?.clientHeight || 80;
     context.strokeStyle = "white";
-
     context.lineWidth = 0.5;
     setContext(context);
   };
@@ -137,7 +136,7 @@ const WaveForm = ({ name, index }: Props) => {
 
   return (
     <div
-      className={styles.wrapper}
+      className={`${styles.wrapper} ${isRecording ? styles.recording : ""}`}
       ref={wrapperRef}
       style={{
         opacity: volume * (1 - 0.2) + 0.2,

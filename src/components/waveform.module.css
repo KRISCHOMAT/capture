@@ -95,3 +95,7 @@ canvas {
   width: 2px;
   background-color: gray;
 }
+
+.recording {
+  background-color: var(--recColor);
+}
