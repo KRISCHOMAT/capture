@@ -84,10 +84,7 @@ const WaveForm = ({ name, index }: Props) => {
   };
 
   useEffect(() => {
-    if (wrapperRef.current && startRef.current && endRef.current) {
-      wrapperRef.current.ontouchmove = handlePreventDefault;
-      wrapperRef.current.ontouchstart = handlePreventDefault;
-      wrapperRef.current.ontouchcancel = handlePreventDefault;
+    if (startRef.current && endRef.current) {
       startRef.current.ontouchmove = handlePreventDefault;
       startRef.current.ontouchstart = handlePreventDefault;
       startRef.current.ontouchcancel = handlePreventDefault;
@@ -95,7 +92,7 @@ const WaveForm = ({ name, index }: Props) => {
       endRef.current.ontouchstart = handlePreventDefault;
       endRef.current.ontouchcancel = handlePreventDefault;
     }
-  }, [wrapperRef, startRef, endRef]);
+  }, [startRef, endRef]);
 
   useEffect(() => {
     if (audioBuffer) {
