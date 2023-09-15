@@ -9,7 +9,7 @@ function App() {
     <div className="app">
       <div className="logo">
         <h1>Capture</h1>
-        <span>Version 1.0</span>
+        <span>Version 1.0.1</span>
       </div>
       {Array.from({ length: constants.NUM_SAMPLES }).map((_, i) => {
         return (
