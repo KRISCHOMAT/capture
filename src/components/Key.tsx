@@ -1,62 +1,43 @@
-import { useEffect, useState } from "react";
 import styles from "./key.module.css";
+import { VoiceStore } from "../store/useVoiceStore";
 
 interface Props {
-  startPlaying: () => void;
-  stopPlaying: () => void;
-  setSemitone: (semitone: number) => void;
+  voice: VoiceStore;
 }
 
-const Key = ({ startPlaying, stopPlaying, setSemitone }: Props) => {
-  const [pitch, setPitch] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-
-  const handlePitchUp = () => {
-    if (pitch >= 12) {
-      setPitch(-12);
-    } else {
-      setPitch(pitch + 1);
-    }
-  };
-
-  const handlePitchDown = () => {
-    if (pitch <= -12) {
-      setPitch(12);
-    } else {
-      setPitch(pitch - 1);
-    }
-  };
-
-  useEffect(() => {
-    setSemitone(pitch);
-  }, [pitch]);
-
-  const handlePlay = () => {
-    startPlaying();
-    setIsActive(true);
-  };
-
-  const handleStop = () => {
-    stopPlaying();
-    setIsActive(false);
-  };
+const Key = ({ voice }: Props) => {
+  const { play, stop, pitch, setPitch, isPlaying } = voice;
 
   return (
     <div className={styles.wrapper}>
       <div
-        className={`${styles.key} ${isActive ? styles.active : ""}`}
-        onMouseDown={handlePlay}
-        onMouseUp={handleStop}
-        onTouchStart={handlePlay}
-        onTouchEnd={handleStop}
-        onTouchCancel={handleStop}
+        className={`${styles.key} ${isPlaying ? styles.active : ""}`}
+        onMouseDown={play}
+        onMouseUp={stop}
+        onTouchStart={play}
+        onTouchEnd={stop}
+        onTouchCancel={stop}
       ></div>
       <div className={styles.pitch}>
-        <button onClick={handlePitchDown} onTouchStart={handlePitchDown}>
+        <button
+          onClick={() => {
+            setPitch(pitch - 1);
+          }}
+          onTouchStart={() => {
+            setPitch(pitch - 1);
+          }}
+        >
           {"<"}
         </button>
         <span>{pitch}</span>
-        <button onClick={handlePitchUp} onTouchStart={handlePitchUp}>
+        <button
+          onClick={() => {
+            setPitch(pitch + 1);
+          }}
+          onTouchStart={() => {
+            setPitch(pitch + 1);
+          }}
+        >
           {">"}
         </button>
       </div>

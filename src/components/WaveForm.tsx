@@ -8,8 +8,17 @@ interface Props {
 }
 
 const WaveForm = ({ name, sample }: Props) => {
-  const { rec, displayData, isRecording, setStart, setEnd, att, rel, trig } =
-    sample;
+  const {
+    rec,
+    displayData,
+    isRecording,
+    setStart,
+    setEnd,
+    att,
+    rel,
+    trig,
+    vol,
+  } = sample;
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [valueStart, setValueStart] = useState(50);
@@ -127,7 +136,7 @@ const WaveForm = ({ name, sample }: Props) => {
       className={`${styles.wrapper} ${isRecording ? styles.recording : ""}`}
       ref={wrapperRef}
       style={{
-        opacity: 1 * (1 - 0.2) + 0.2,
+        opacity: vol * (1 - 0.2) + 0.2,
       }}
     >
       <canvas ref={canvasRef}></canvas>
@@ -135,7 +144,10 @@ const WaveForm = ({ name, sample }: Props) => {
         <div className={styles.rec} onClick={rec}></div>
         <div className={styles.name}>{name}</div>
       </div>
-      <div className={styles.trg} style={{ left: `${distance * trig}%` }}></div>
+      <div
+        className={styles.trg}
+        style={{ left: `${distance * trig + valueStart}%` }}
+      ></div>
       <div
         className={styles.att}
         style={{

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import useMasterStore from "./useMasterStore";
 
 export interface SampleStore {
+  env: GainNode | null;
   mediaRecorder: MediaRecorder | null;
   audioBuffer: AudioBuffer | null;
   displayData: number[];
@@ -24,6 +25,7 @@ export interface SampleStore {
 
 const createSampleStore = () => {
   return create<SampleStore>((set, get) => ({
+    env: null,
     mediaRecorder: null,
     audioBuffer: null,
     displayData: [],
@@ -35,7 +37,6 @@ const createSampleStore = () => {
     rel: 0,
     vol: 0,
     rec: async () => {
-      console.log("rec");
       let mediaRecorder = get().mediaRecorder;
       // init media recorder if null
       if (!mediaRecorder) {

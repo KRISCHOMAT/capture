@@ -4,7 +4,6 @@ import createVoiceStore, { VoiceStore } from "./useVoiceStore";
 
 interface MasterStore {
   ctx: AudioContext | null;
-  env: GainNode | null;
   vol: number;
   att: number;
   rel: number;
@@ -13,19 +12,34 @@ interface MasterStore {
   sampleLength: number;
   samples: UseBoundStore<StoreApi<SampleStore>>[];
   voices: UseBoundStore<StoreApi<VoiceStore>>[];
+  setVol: (vol: number) => void;
+  setAtt: (att: number) => void;
+  setRel: (rel: number) => void;
 }
 
-const useMasterStore = create<MasterStore>(() => ({
-  ctx: null,
-  env: null,
-  vol: 0,
-  att: 0,
-  rel: 0,
-  numSamples: 2,
-  numVoices: 3,
-  sampleLength: 5000, // 5 sec
-  samples: Array.from({ length: 2 }).map(() => createSampleStore()),
-  voices: Array.from({ length: 3 }).map(() => createVoiceStore()),
-}));
+const useMasterStore = create<MasterStore>((set) => {
+  const numSamples = 2;
+  const numVoices = 4;
+  return {
+    ctx: null,
+    vol: 0,
+    att: 0,
+    rel: 0,
+    numSamples,
+    numVoices,
+    sampleLength: 5000, // 5 sec
+    samples: Array.from({ length: numSamples }).map(() => createSampleStore()),
+    voices: Array.from({ length: numVoices }).map(() => createVoiceStore()),
+    setVol: (vol: number) => {
+      set({ vol });
+    },
+    setAtt: (att: number) => {
+      set({ att });
+    },
+    setRel: (rel: number) => {
+      set({ rel });
+    },
+  };
+});
 
 export default useMasterStore;
