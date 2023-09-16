@@ -7,25 +7,29 @@ import WaveForm from "./components/WaveForm";
 function App() {
   const samples = useMasterStore((state) => state.samples);
   return (
-    <div className="app">
-      <div className="logo">
-        <h1>Capture</h1>
-        <span>Version 1.0.1</span>
+    <>
+      <div className="app">
+        <div className="logo">
+          <h1>Capture</h1>
+          <span>Version 1.1.0</span>
+        </div>
+
+        <div>
+          {samples.map((sample, i) => {
+            return (
+              <WaveForm
+                key={i}
+                name={String.fromCharCode(65 + i)}
+                sample={sample()}
+              />
+            );
+          })}
+        </div>
+        <TabMenu />
+
+        <Keyboard />
       </div>
-
-      {samples.map((sample, i) => {
-        return (
-          <WaveForm
-            key={i}
-            name={String.fromCharCode(65 + i)}
-            sample={sample()}
-          />
-        );
-      })}
-
-      <TabMenu />
-      <Keyboard />
-    </div>
+    </>
   );
 }
 
