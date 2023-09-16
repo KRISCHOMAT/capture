@@ -18,7 +18,7 @@ interface MasterStore {
 }
 
 const useMasterStore = create<MasterStore>((set) => {
-  const numSamples = 2;
+  const numSamples = 3;
   const numVoices = 4;
   return {
     ctx: null,
