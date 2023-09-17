@@ -85,12 +85,11 @@ const createVoiceStore = () => {
 
       const source = ctx.createBufferSource();
       source.loop = false;
-      source.loopStart = sample.getState().start * buf.duration;
-      source.loopEnd = sample.getState().end * buf.duration;
-      const loopLength = source.loopEnd - source.loopStart;
+      source.loopStart = sample.getState().start * 5;
+      source.loopEnd = sample.getState().end * 5;
       source.buffer = buf;
       source.playbackRate.value = Math.pow(2, get().pitch / 12);
-      source.start(ctx.currentTime, sample.getState().start * buf.duration);
+      source.start(ctx.currentTime, sample.getState().start * 5);
 
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0, ctx.currentTime);
@@ -98,20 +97,25 @@ const createVoiceStore = () => {
       source.connect(gain);
       gain.connect(env);
 
+      const loopLength =
+        (source.loopEnd - source.loopStart) / source.playbackRate.value;
+      const att = loopLength * sample.getState().att;
+      const rel = loopLength * sample.getState().rel;
+      const hold = loopLength - rel;
+
       gain.gain.linearRampToValueAtTime(
         sample.getState().vol,
-        ctx.currentTime +
-          (loopLength * sample.getState().att) / source.playbackRate.value
+        ctx.currentTime + att
       );
 
       // ramp down
-      const releaseTime = loopLength * (1 - sample.getState().rel);
       setTimeout(() => {
-        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + releaseTime);
-      }, releaseTime * 1000);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + hold);
+      }, hold * 1000);
 
       // clear source
       setTimeout(() => {
+        gain.gain.setTargetAtTime(0, ctx.currentTime + loopLength, 10);
         source.stop();
         source.disconnect();
       }, loopLength * 1000);
