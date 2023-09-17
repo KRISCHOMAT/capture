@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./waveform.module.css";
-import { SampleStore } from "../store/useSampleStore";
+import { SampleStore } from "../../store/useSampleStore";
 
 interface Props {
   name: string;

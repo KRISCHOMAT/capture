@@ -1,6 +1,6 @@
 import Controlls from "./Controlls";
 import styles from "./controllswrapper.module.css";
-import useMasterStore from "../store/useMasterStore";
+import useMasterStore from "../../store/useMasterStore";
 
 const ControllsWrapper = () => {
   const samples = useMasterStore((state) => state.samples);

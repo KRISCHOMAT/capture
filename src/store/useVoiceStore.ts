@@ -45,7 +45,7 @@ const createVoiceStore = () => {
         set({ env });
       }
 
-      // resume if is Playing
+      // resume if isPlaying
       if (get().isPlaying) {
         clearTimeout(get().timeout);
         const env = get().env as GainNode;
@@ -54,14 +54,20 @@ const createVoiceStore = () => {
         const currentGain = env.gain.value;
         env.gain.cancelScheduledValues(ctx.currentTime);
         env.gain.setValueAtTime(currentGain, ctx.currentTime);
-        env.gain.linearRampToValueAtTime(1, ctx.currentTime + att);
+        env.gain.linearRampToValueAtTime(
+          useMasterStore.getState().vol,
+          ctx.currentTime + att
+        );
         //else start loop
       } else {
         const env = get().env as GainNode;
         const ctx = useMasterStore.getState().ctx as AudioContext;
         const att = useMasterStore.getState().att;
         env.gain.setValueAtTime(0, ctx.currentTime);
-        env.gain.linearRampToValueAtTime(1, ctx.currentTime + att);
+        env.gain.linearRampToValueAtTime(
+          useMasterStore.getState().vol,
+          ctx.currentTime + att
+        );
         set({ isPlaying: true });
         for (let i = 0; i < useMasterStore.getState().numSamples; i++) {
           get()._playSample(i);
@@ -110,6 +116,7 @@ const createVoiceStore = () => {
         source.disconnect();
       }, loopLength * 1000);
 
+      // retrigger
       setTimeout(() => {
         if (get().isPlaying) {
           get()._playSample(index);
@@ -122,7 +129,9 @@ const createVoiceStore = () => {
       const rel = useMasterStore.getState().rel;
 
       if (!env || !ctx) return;
+
       const currentGain = env.gain.value;
+
       env.gain.cancelScheduledValues(ctx.currentTime);
       env.gain.setValueAtTime(currentGain, ctx.currentTime);
       env.gain.linearRampToValueAtTime(0, ctx.currentTime + rel);

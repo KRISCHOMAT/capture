@@ -34,9 +34,15 @@ const useMasterStore = create<MasterStore>((set) => {
       set({ vol });
     },
     setAtt: (att: number) => {
+      if (att === 0) {
+        att = 0.01;
+      }
       set({ att });
     },
     setRel: (rel: number) => {
+      if (rel === 0) {
+        rel = 0.01;
+      }
       set({ rel });
     },
   };

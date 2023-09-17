@@ -1,11 +1,12 @@
 import "./App.css";
-import Keyboard from "./components/Keyboard";
+import Keyboard from "./components/Keyboard/Keyboard";
 import TabMenu from "./components/TabMenu/TabMenu";
 import useMasterStore from "./store/useMasterStore";
-import WaveForm from "./components/WaveForm";
+import WaveForm from "./components/WaveForm/WaveForm";
 
 function App() {
   const samples = useMasterStore((state) => state.samples);
+
   return (
     <>
       <div className="app">

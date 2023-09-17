@@ -1,5 +1,5 @@
-import useMasterStore from "../store/useMasterStore";
-import Slider from "./Slider";
+import useMasterStore from "../../store/useMasterStore";
+import Slider from "../Slider/Slider";
 import styles from "./controlls.module.css";
 
 const MainControls = () => {
@@ -23,9 +23,9 @@ const MainControls = () => {
         <div className={styles.hr} />
       </div>
       <div className={styles.container}>
-        <Slider label="Vol" setter={setVol} />
-        <Slider label="Att" setter={handleSetAttack} initVal={0} />
-        <Slider label="Rel" setter={handleSetRelease} initVal={0} />
+        <Slider initVal={75} label="Vol" setter={setVol} />
+        <Slider initVal={30} label="Att" setter={handleSetAttack} />
+        <Slider initVal={30} label="Rel" setter={handleSetRelease} />
       </div>
     </div>
   );

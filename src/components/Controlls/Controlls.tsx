@@ -1,6 +1,6 @@
-import Slider from "./Slider";
+import Slider from "../Slider/Slider";
 import styles from "./controlls.module.css";
-import { SampleStore } from "../store/useSampleStore";
+import { SampleStore } from "../../store/useSampleStore";
 
 interface Props {
   name: string;
@@ -35,8 +35,8 @@ const Controlls = ({ name, sample }: Props) => {
       </div>
       <div className={styles.container}>
         <Slider initVal={50} setter={handleSetVolume} label="Vol" />
-        <Slider initVal={50} setter={handleSetAtt} label={"Att"} />
-        <Slider initVal={50} setter={handleSetRel} label={"Rel"} />
+        <Slider initVal={100} setter={handleSetAtt} label={"Att"} />
+        <Slider initVal={100} setter={handleSetRel} label={"Rel"} />
         <Slider initVal={50} setter={handleSetTrg} label={"Trig"} />
       </div>
     </div>

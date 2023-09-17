@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./tabmenu.module.css";
-import ControllsWrapper from "../ControllsWrapper";
-import MainControls from "../MainControls";
+import ControllsWrapper from "../Controlls/ControllsWrapper";
+import MainControls from "../Controlls/MainControls";
 
 const TabMenu = () => {
   const [activeId, setActiveId] = useState(0);

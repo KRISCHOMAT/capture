@@ -33,7 +33,7 @@ const createSampleStore = () => {
     start: 0,
     end: 1,
     trig: 0.5,
-    att: 0,
+    att: 1,
     rel: 0,
     vol: 0,
     rec: async () => {
