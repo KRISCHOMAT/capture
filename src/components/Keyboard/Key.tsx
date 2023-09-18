@@ -1,5 +1,5 @@
 import styles from "./key.module.css";
-import { VoiceStore } from "../store/useVoiceStore";
+import { VoiceStore } from "../../store/useVoiceStore";
 
 interface Props {
   voice: VoiceStore;
