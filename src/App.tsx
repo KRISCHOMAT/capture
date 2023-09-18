@@ -12,7 +12,7 @@ function App() {
       <div className="app">
         <div className="logo">
           <h1>Capture</h1>
-          <span>Version 1.1.0</span>
+          <span>Version 1.2.0</span>
         </div>
 
         <div>
