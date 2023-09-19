@@ -68,7 +68,6 @@ const Key = ({ voice }: Props) => {
         <button
           className={isLatchMode ? styles.isLatch : ""}
           onClick={setIsLatchMode}
-          //onTouchStart={setIsLatchMode}
         ></button>
       </div>
     </div>
