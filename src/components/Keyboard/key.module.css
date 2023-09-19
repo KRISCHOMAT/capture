@@ -16,10 +16,6 @@
   border-radius: 5px;
 }
 
-.active {
-  background-color: var(--backgroundLight);
-}
-
 .pitch {
   color: white;
   display: flex;
@@ -44,4 +40,36 @@
   flex-grow: 1;
   text-align: center;
   font-weight: bolder;
+}
+
+.playing {
+  background-color: var(--backgroundLight);
+}
+
+.active {
+  background-color: var(--startColor) !important;
+}
+
+.latch {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px;
+  width: 100%;
+  font-weight: bold;
+}
+
+.latch button {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: var(--endColor);
+  transition: background-color 0.3s;
+}
+
+.isLatch {
+  background-color: var(--startColor) !important;
 }

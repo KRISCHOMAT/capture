@@ -1,6 +1,6 @@
 .wrapper {
   display: flex;
-  height: 120px;
+  height: 150px;
   justify-content: space-around;
   margin-top: 10px;
   gap: 15px;

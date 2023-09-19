@@ -6,11 +6,14 @@ export interface VoiceStore {
   env: GainNode | null;
   pitch: number;
   isPlaying: boolean;
+  isActive: boolean;
+  isLatchMode: boolean;
   timeout: number;
   setPitch: (pitch: number) => void;
   play: () => void;
-  stop: () => void;
+  stop: (force?: boolean) => void;
   _playSample: (index: number) => void;
+  setIsLatchMode: () => void;
 }
 
 const createVoiceStore = () => {
@@ -20,6 +23,8 @@ const createVoiceStore = () => {
     pitch: 0,
     isPlaying: false,
     timeout: 0,
+    isLatchMode: false,
+    isActive: false,
     setPitch: (pitch: number) => {
       if (pitch > 12) {
         set({ pitch: -12 });
@@ -30,6 +35,14 @@ const createVoiceStore = () => {
       }
     },
     play: () => {
+      if (get().isLatchMode && get().isPlaying && get().isActive) {
+        get().stop();
+        set({ isActive: false });
+        return;
+      } else if (get().isLatchMode && !get().isActive) {
+        set({ isActive: true });
+      }
+
       // create auio context if null
       if (!useMasterStore.getState().ctx) {
         const ctx = new AudioContext();
@@ -127,7 +140,8 @@ const createVoiceStore = () => {
         }
       }, loopLength * 1000 * sample.getState().trig);
     },
-    stop: () => {
+    stop: (force) => {
+      if (get().isLatchMode && get().isActive && !force) return;
       const env = get().env;
       const ctx = useMasterStore.getState().ctx;
       const rel = useMasterStore.getState().rel;
@@ -144,6 +158,27 @@ const createVoiceStore = () => {
         set({ isPlaying: false });
       }, rel * 1000);
       set({ timeout });
+    },
+    setIsLatchMode: () => {
+      const isLatch = get().isLatchMode;
+
+      if (get().isPlaying) {
+        set({ isActive: true });
+      }
+      if (isLatch) {
+        set({ isActive: false });
+        get().stop(true);
+      } else {
+        clearTimeout(get().timeout);
+        const env = get().env;
+        const ctx = useMasterStore.getState().ctx;
+        if (env && ctx) {
+          const currentGain = env.gain.value;
+          env.gain.cancelScheduledValues(ctx.currentTime);
+          env.gain.setValueAtTime(currentGain, ctx.currentTime);
+        }
+      }
+      set({ isLatchMode: !isLatch });
     },
   }));
 };

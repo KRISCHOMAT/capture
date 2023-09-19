@@ -7,7 +7,7 @@
 
 .container {
   width: 4px;
-  height: 100px;
+  height: 80px;
   background-color: var(--background);
   position: relative;
   left: 50%;
