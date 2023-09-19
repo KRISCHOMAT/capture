@@ -15,7 +15,7 @@ const TabMenu = () => {
             setActiveId(0);
           }}
           style={{
-            borderBottom: activeId === 0 ? "1px solid #082943" : "1px solid",
+            borderBottom: activeId === 0 ? "2px solid #082943" : "1px solid",
           }}
         >
           Samples
@@ -26,7 +26,7 @@ const TabMenu = () => {
             setActiveId(1);
           }}
           style={{
-            borderBottom: activeId === 1 ? "1px solid #082943" : "1px solid",
+            borderBottom: activeId === 1 ? "2px solid #082943" : "1px solid",
           }}
         >
           Main
