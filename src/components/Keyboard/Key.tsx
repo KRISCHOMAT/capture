@@ -48,10 +48,7 @@ const Key = ({ voice }: Props) => {
       ></div>
       <div className={styles.pitch}>
         <button
-          onMouseDown={() => {
-            setPitch(pitch - 1);
-          }}
-          onTouchStart={() => {
+          onClick={() => {
             setPitch(pitch - 1);
           }}
         >
@@ -59,10 +56,7 @@ const Key = ({ voice }: Props) => {
         </button>
         <span>{pitch}</span>
         <button
-          onMouseDown={() => {
-            setPitch(pitch + 1);
-          }}
-          onTouchStart={() => {
+          onClick={() => {
             setPitch(pitch + 1);
           }}
         >
@@ -73,8 +67,8 @@ const Key = ({ voice }: Props) => {
         latch
         <button
           className={isLatchMode ? styles.isLatch : ""}
-          onMouseDown={setIsLatchMode}
-          onTouchStart={setIsLatchMode}
+          onClick={setIsLatchMode}
+          //onTouchStart={setIsLatchMode}
         ></button>
       </div>
     </div>
