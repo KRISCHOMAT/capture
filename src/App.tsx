@@ -3,6 +3,15 @@ import Keyboard from "./components/Keyboard/Keyboard";
 import TabMenu from "./components/TabMenu/TabMenu";
 import useMasterStore from "./store/useMasterStore";
 import WaveForm from "./components/WaveForm/WaveForm";
+import { Tab } from "./components/TabMenu/TabMenu";
+import ControllsWrapper from "./components/Controlls/ControllsWrapper";
+import MainControls from "./components/Controlls/MainControls";
+
+const tabs: Tab[] = [
+  { title: "Samples", element: ControllsWrapper },
+  { title: "Modulation", element: ControllsWrapper },
+  { title: "Main", element: MainControls },
+];
 
 function App() {
   const samples = useMasterStore((state) => state.samples);
@@ -26,7 +35,7 @@ function App() {
             );
           })}
         </div>
-        <TabMenu />
+        <TabMenu tabs={tabs} />
 
         <Keyboard />
       </div>

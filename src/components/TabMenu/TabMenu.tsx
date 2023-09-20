@@ -1,54 +1,49 @@
 import { useState } from "react";
 import styles from "./tabmenu.module.css";
-import ControllsWrapper from "../Controlls/ControllsWrapper";
-import MainControls from "../Controlls/MainControls";
 
-const TabMenu = () => {
+export interface Tab {
+  title: string;
+  element: () => JSX.Element;
+}
+
+interface Props {
+  tabs: Tab[];
+}
+
+const TabMenu = ({ tabs }: Props) => {
   const [activeId, setActiveId] = useState(0);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.menuContainer}>
-        <div
-          className={styles.link}
-          onClick={() => {
-            setActiveId(0);
-          }}
-          style={{
-            borderBottom: activeId === 0 ? "2px solid #082943" : "1px solid",
-          }}
-        >
-          Samples
-        </div>
-        <div
-          className={styles.link}
-          onClick={() => {
-            setActiveId(1);
-          }}
-          style={{
-            borderBottom: activeId === 1 ? "2px solid #082943" : "1px solid",
-          }}
-        >
-          Main
-        </div>
+        {tabs.map((tab, i) => {
+          return (
+            <div
+              className={styles.link}
+              onClick={() => setActiveId(i)}
+              style={{
+                borderBottom:
+                  activeId === i ? "2px solid #082943" : " 1px solid",
+              }}
+              key={tab.title}
+            >
+              {tab.title}
+            </div>
+          );
+        })}
       </div>
       <div className={styles.output}>
-        <div
-          className={styles.option}
-          style={{
-            display: activeId === 0 ? "flex" : "none",
-          }}
-        >
-          <ControllsWrapper />
-        </div>
-        <div
-          className={styles.option}
-          style={{
-            display: activeId === 1 ? "flex" : "none",
-          }}
-        >
-          <MainControls />
-        </div>
+        {tabs.map((tab, i) => {
+          return (
+            <div
+              className={styles.option}
+              style={{ display: activeId === i ? "flex" : "none" }}
+              key={i}
+            >
+              <tab.element />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
