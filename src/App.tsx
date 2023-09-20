@@ -9,7 +9,6 @@ import MainControls from "./components/Controlls/MainControls";
 
 const tabs: Tab[] = [
   { title: "Samples", element: ControllsWrapper },
-  { title: "Modulation", element: ControllsWrapper },
   { title: "Main", element: MainControls },
 ];
 
