@@ -44,16 +44,23 @@ const createVoiceStore = () => {
       }
 
       // create auio context if null
-      if (!useMasterStore.getState().ctx) {
+      if (
+        !useMasterStore.getState().ctx &&
+        !useMasterStore.getState().masterGain
+      ) {
         const ctx = new AudioContext();
-        useMasterStore.setState({ ctx });
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.75, ctx.currentTime);
+        masterGain.connect(ctx.destination);
+        useMasterStore.setState({ ctx, masterGain });
       }
 
       // create env if null
       if (!get().env) {
         const ctx = useMasterStore.getState().ctx as AudioContext;
+        const masterGain = useMasterStore.getState().masterGain as GainNode;
         const env = ctx.createGain();
-        env.connect(ctx.destination);
+        env.connect(masterGain);
         env.gain.setValueAtTime(0, ctx.currentTime);
         set({ env });
       }
@@ -67,20 +74,14 @@ const createVoiceStore = () => {
         const currentGain = env.gain.value;
         env.gain.cancelScheduledValues(ctx.currentTime);
         env.gain.setValueAtTime(currentGain, ctx.currentTime);
-        env.gain.linearRampToValueAtTime(
-          useMasterStore.getState().vol,
-          ctx.currentTime + att
-        );
+        env.gain.linearRampToValueAtTime(1, ctx.currentTime + att);
         //else start loop
       } else {
         const env = get().env as GainNode;
         const ctx = useMasterStore.getState().ctx as AudioContext;
         const att = useMasterStore.getState().att;
         env.gain.setValueAtTime(0, ctx.currentTime);
-        env.gain.linearRampToValueAtTime(
-          useMasterStore.getState().vol,
-          ctx.currentTime + att
-        );
+        env.gain.linearRampToValueAtTime(1, ctx.currentTime + att);
         set({ isPlaying: true });
         for (let i = 0; i < useMasterStore.getState().numSamples; i++) {
           get()._playSample(i);
@@ -94,6 +95,7 @@ const createVoiceStore = () => {
       if (!buf) return;
 
       const ctx = useMasterStore.getState().ctx as AudioContext;
+
       const env = get().env as GainNode;
 
       const source = ctx.createBufferSource();

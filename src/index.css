@@ -46,6 +46,16 @@ html {
   background-color: #082943;
 }
 
+.header {
+  display: flex;
+  color: white;
+  justify-content: space-between;
+}
+
+.info {
+  font-size: 0.8rem;
+}
+
 .logo {
   display: flex;
   flex-direction: column;

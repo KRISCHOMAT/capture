@@ -45,11 +45,6 @@ const WaveForm = ({ name, sample }: Props) => {
     setter(pos);
   };
 
-  useEffect(() => {
-    const newDistance = valueEnd - valueStart;
-    setDistance(newDistance);
-  }, [valueStart, valueEnd]);
-
   const draw = () => {
     if (!context || !canvasRef.current) return;
 
@@ -95,6 +90,11 @@ const WaveForm = ({ name, sample }: Props) => {
       endRef.current.ontouchcancel = handlePreventDefault;
     }
   }, [startRef, endRef]);
+
+  useEffect(() => {
+    const newDistance = valueEnd - valueStart;
+    setDistance(newDistance);
+  }, [valueStart, valueEnd]);
 
   useEffect(() => {
     draw();

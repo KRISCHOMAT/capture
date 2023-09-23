@@ -67,10 +67,10 @@ const createSampleStore = () => {
       return mediaRecorder;
     },
     setAtt: (att: number) => {
-      set({ att });
+      set({ att: att / 2 });
     },
     setRel: (rel: number) => {
-      set({ rel });
+      set({ rel: rel / 2 });
     },
     setStart: (start: number) => {
       set({ start });
@@ -79,6 +79,9 @@ const createSampleStore = () => {
       set({ end });
     },
     setTrig: (trig: number) => {
+      if (trig <= 0.05) {
+        trig = 0.05;
+      }
       set({ trig });
     },
     setVol: (vol: number) => {

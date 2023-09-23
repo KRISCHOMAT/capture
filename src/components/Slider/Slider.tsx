@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./slider.module.css";
 
 interface Props {
-  setter?: (val: number) => void;
-  initVal?: number;
-  label?: string;
+  setter: (val: number) => void;
+  initVal: number;
+  label: string;
 }
 
 const Slider = ({ setter, initVal, label }: Props) => {
@@ -57,14 +57,11 @@ const Slider = ({ setter, initVal, label }: Props) => {
       initVal &&
       setter
     ) {
-      setter(initVal / 100);
-
-      posIndicatorRef.current.style.top = `${100 - initVal}%`;
-      progressIndicatorRef.current.style.height = `${initVal}%`;
+      setter(initVal);
+      posIndicatorRef.current.style.top = `${100 - initVal * 100}%`;
+      progressIndicatorRef.current.style.height = `${initVal * 100}%`;
     }
-  }, [initVal]);
 
-  useEffect(() => {
     document.addEventListener("mouseup", () => {
       setIsMouseDown(false);
     });

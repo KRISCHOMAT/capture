@@ -4,7 +4,7 @@ import createVoiceStore, { VoiceStore } from "./useVoiceStore";
 
 interface MasterStore {
   ctx: AudioContext | null;
-  vol: number;
+  masterGain: GainNode | null;
   att: number;
   rel: number;
   numSamples: number;
@@ -17,12 +17,12 @@ interface MasterStore {
   setRel: (rel: number) => void;
 }
 
-const useMasterStore = create<MasterStore>((set) => {
+const useMasterStore = create<MasterStore>((set, get) => {
   const numSamples = 2;
   const numVoices = 4;
   return {
     ctx: null,
-    vol: 0,
+    masterGain: null,
     att: 0,
     rel: 0,
     numSamples,
@@ -31,19 +31,25 @@ const useMasterStore = create<MasterStore>((set) => {
     samples: Array.from({ length: numSamples }).map(() => createSampleStore()),
     voices: Array.from({ length: numVoices }).map(() => createVoiceStore()),
     setVol: (vol: number) => {
-      set({ vol });
+      const masterGain = get().masterGain;
+      const ctx = get().ctx;
+      if (masterGain && ctx) {
+        masterGain.gain.setValueAtTime(vol, ctx.currentTime);
+      }
+
+      set({ masterGain });
     },
     setAtt: (att: number) => {
       if (att === 0) {
         att = 0.01;
       }
-      set({ att });
+      set({ att: att * 5 });
     },
     setRel: (rel: number) => {
       if (rel === 0) {
         rel = 0.01;
       }
-      set({ rel });
+      set({ rel: rel * 5 });
     },
   };
 });
